@@ -1,15 +1,35 @@
 import 'package:final_projek/pages/main_page.dart';
-import 'package:final_projek/pages/register.dart';
+import 'package:final_projek/pages/register_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  final VoidCallback showRegisterPage;
+  const LoginPage({Key? key, required this.showRegisterPage}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreen();
+  State<LoginPage> createState() => _LoginPage();
 }
 
-class _LoginScreen extends State<LoginScreen> {
+class _LoginPage extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
+
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,14 +62,7 @@ class _LoginScreen extends State<LoginScreen> {
                           "Don't have an account ?",
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterScreen(),
-                              ),
-                            );
-                          },
+                          onTap: widget.showRegisterPage,
                           child: const Text(
                             "Register here",
                             style: TextStyle(fontWeight: FontWeight.w700),
@@ -105,7 +118,7 @@ class _LoginScreen extends State<LoginScreen> {
         Padding(
           padding: const EdgeInsets.only(top: 20),
           child: TextFormField(
-            // controller: emailController,
+            controller: emailController,
             decoration: InputDecoration(
               labelText: "Enter Email",
               enabledBorder: OutlineInputBorder(
@@ -129,7 +142,7 @@ class _LoginScreen extends State<LoginScreen> {
           padding: const EdgeInsets.only(top: 20),
           child: TextFormField(
             obscureText: true,
-            // controller: passwordController,
+            controller: passwordController,
             decoration: InputDecoration(
               labelText: "Enter Password",
               enabledBorder: OutlineInputBorder(
@@ -168,8 +181,7 @@ class _LoginScreen extends State<LoginScreen> {
           ),
         ),
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (contex) => const MainPage()));
+          signIn();
         },
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
