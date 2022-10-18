@@ -5,7 +5,6 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection =
     _firestore.collection('readingList');
 final user = FirebaseAuth.instance.currentUser;
-late final String documentId;
 
 class Book {
   // tambah data buku
@@ -41,7 +40,7 @@ class Book {
         .snapshots();
   }
 
-    // read To Read Later book
+  // read To Read Later book
   static Stream<QuerySnapshot> readLaterBook() {
     CollectionReference bookCollection =
         _mainCollection.doc(user?.uid).collection('books');
@@ -52,7 +51,7 @@ class Book {
         .snapshots();
   }
 
-    // read Finished book
+  // read Finished book
   static Stream<QuerySnapshot> readFinishedBook() {
     CollectionReference bookCollection =
         _mainCollection.doc(user?.uid).collection('books');
@@ -63,7 +62,7 @@ class Book {
         .snapshots();
   }
 
-    // read Give Up book
+  // read Give Up book
   static Stream<QuerySnapshot> readGiveupBook() {
     CollectionReference bookCollection =
         _mainCollection.doc(user?.uid).collection('books');

@@ -18,6 +18,7 @@ class LaterList extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final documentSnapshot = snapshot.data!.docs[index];
+              final docId = snapshot.data!.docs[index].id;
               String title = documentSnapshot['title'];
               String author = documentSnapshot['author'];
               int totalPage = documentSnapshot['totalPage'];
@@ -27,7 +28,12 @@ class LaterList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailReadLaterBook(),
+                      builder: (context) => DetailReadLaterBook(
+                        documentId: docId,
+                        title: title,
+                        author: author,
+                        totalPage: totalPage,
+                      ),
                     ),
                   );
                 },

@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 
 class DetailCurrentlyReadingBook extends StatefulWidget {
-  const DetailCurrentlyReadingBook({Key? key}) : super(key: key);
+  final documentId;
+  final String title;
+  final String author;
+  final int totalPage;
+  const DetailCurrentlyReadingBook(
+      {Key? key,
+      this.documentId,
+      required this.title,
+      required this.author,
+      required this.totalPage})
+      : super(key: key);
 
   @override
   State<DetailCurrentlyReadingBook> createState() =>
@@ -84,22 +94,22 @@ class _DetailCurrentlyReadingBookState
                 ),
               ),
               // title
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4.0),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
                 child: Center(
                   child: Text(
-                    'Pulang',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                    widget.title,
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
               // author
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8.0),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
                 child: Center(
                   child: Text(
-                    'By Tere Liye',
-                    style: TextStyle(
+                    widget.author,
+                    style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                         color: Colors.black45),
@@ -120,8 +130,9 @@ class _DetailCurrentlyReadingBookState
                 children: [
                   const Text('Pages', style: TextStyle(fontSize: 17)),
                   const Text(' 20',
-                      style: TextStyle(fontSize: 25, color: Colors.amber)),
-                  const Text(' / 200', style: TextStyle(fontSize: 17)),
+                      style: TextStyle(fontSize: 20, color: Colors.amber)),
+                  Text('/ ' + widget.totalPage.toString(),
+                      style: const TextStyle(fontSize: 17)),
                   IconButton(
                     onPressed: () {},
                     icon: const Icon(
@@ -134,7 +145,7 @@ class _DetailCurrentlyReadingBookState
 
               //notes
               Container(
-                margin: EdgeInsets.all(8),
+                margin: const EdgeInsets.all(8),
                 width: double.infinity,
                 height: 100,
                 decoration: BoxDecoration(
@@ -164,7 +175,7 @@ class _DetailCurrentlyReadingBookState
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.more_vert,
                             size: 18,
                           ),
@@ -175,7 +186,7 @@ class _DetailCurrentlyReadingBookState
                 ),
               ),
               Container(
-                margin: EdgeInsets.all(8),
+                margin: const EdgeInsets.all(8),
                 width: double.infinity,
                 height: 100,
                 decoration: BoxDecoration(
@@ -205,7 +216,7 @@ class _DetailCurrentlyReadingBookState
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.more_vert,
                             size: 18,
                           ),

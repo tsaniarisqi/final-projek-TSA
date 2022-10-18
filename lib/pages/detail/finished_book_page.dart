@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 
 class DetailFinishedBook extends StatefulWidget {
-  const DetailFinishedBook({Key? key}) : super(key: key);
+  final documentId;
+  final String title;
+  final String author;
+  final int totalPage;
+  const DetailFinishedBook(
+      {Key? key,
+      required this.documentId,
+      required this.title,
+      required this.author,
+      required this.totalPage})
+      : super(key: key);
 
   @override
   State<DetailFinishedBook> createState() => _DetailFinishedBookState();
@@ -82,22 +92,22 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
                 ),
               ),
               // title
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4.0),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
                 child: Center(
                   child: Text(
-                    'Pulang',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                    widget.title,
+                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
               // author
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8.0),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
                 child: Center(
                   child: Text(
-                    'By Tere Liye',
-                    style: TextStyle(
+                    widget.author,
+                    style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                         color: Colors.black45),
@@ -116,7 +126,7 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
 
               //notes
               Container(
-                margin: EdgeInsets.all(8),
+                margin: const EdgeInsets.all(8),
                 width: double.infinity,
                 height: 100,
                 decoration: BoxDecoration(
@@ -146,7 +156,7 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.more_vert,
                             size: 18,
                           ),
@@ -157,7 +167,7 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.all(8),
+                margin: const EdgeInsets.all(8),
                 width: double.infinity,
                 height: 100,
                 decoration: BoxDecoration(
@@ -187,7 +197,7 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.more_vert,
                             size: 18,
                           ),

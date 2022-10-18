@@ -18,6 +18,7 @@ class FinishedList extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final documentSnapshot = snapshot.data!.docs[index];
+              final String docId = snapshot.data!.docs[index].id;
               String title = documentSnapshot['title'];
               String author = documentSnapshot['author'];
               int totalPage = documentSnapshot['totalPage'];
@@ -27,7 +28,12 @@ class FinishedList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailFinishedBook(),
+                      builder: (context) => DetailFinishedBook(
+                        documentId: docId,
+                        title: title,
+                        author: author,
+                        totalPage: totalPage,
+                      ),
                     ),
                   );
                 },

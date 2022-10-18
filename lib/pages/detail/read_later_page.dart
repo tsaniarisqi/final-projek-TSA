@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 
 class DetailReadLaterBook extends StatefulWidget {
-  const DetailReadLaterBook({Key? key}) : super(key: key);
+  final documentId;
+  final String title;
+  final String author;
+  final int totalPage;
+  const DetailReadLaterBook(
+      {Key? key,
+      this.documentId,
+      required this.title,
+      required this.author,
+      required this.totalPage})
+      : super(key: key);
 
   @override
   State<DetailReadLaterBook> createState() => _DetailReadLaterBookState();
@@ -81,22 +91,23 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                 ),
               ),
               // title
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(bottom: 4.0),
                 child: Center(
                   child: Text(
-                    'Pulang',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                    widget.title,
+                    style: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
               // author
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(bottom: 8.0),
                 child: Center(
                   child: Text(
-                    'By Tere Liye',
-                    style: TextStyle(
+                    widget.author,
+                    style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                         color: Colors.black45),
