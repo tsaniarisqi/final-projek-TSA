@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_projek/pages/detail/read_later_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
 
@@ -21,53 +22,63 @@ class LaterList extends StatelessWidget {
               String author = documentSnapshot['author'];
               int totalPage = documentSnapshot['totalPage'];
 
-              return Card(
-                margin: const EdgeInsets.only(top: 8),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 4.0, top: 8, right: 8, bottom: 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        width: 90,
-                        height: 120,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('img/cover.jpeg'),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailReadLaterBook(),
+                    ),
+                  );
+                },
+                child: Card(
+                  margin: const EdgeInsets.only(top: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 4.0, top: 8, right: 8, bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          width: 90,
+                          height: 120,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('img/cover.jpeg'),
+                            ),
                           ),
                         ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, top: 10),
-                            child: Text(
-                              title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, top: 10),
+                              child: Text(
+                                title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, top: 5),
-                            child: Text(
-                              author,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 18,
-                                  color: Colors.black54),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, top: 5),
+                              child: Text(
+                                author,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 18,
+                                    color: Colors.black54),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_projek/pages/detail/finished_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,14 @@ class FinishedList extends StatelessWidget {
               int totalPage = documentSnapshot['totalPage'];
 
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailFinishedBook(),
+                    ),
+                  );
+                },
                 child: Card(
                   margin: const EdgeInsets.only(top: 8),
                   child: Padding(
