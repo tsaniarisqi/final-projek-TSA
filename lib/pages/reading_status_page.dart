@@ -1,4 +1,8 @@
 import 'package:final_projek/pages/main_page.dart';
+import 'package:final_projek/widgets/readingStatusList/currenty_reading_list.dart';
+import 'package:final_projek/widgets/readingStatusList/finished_list.dart';
+import 'package:final_projek/widgets/readingStatusList/give_up_list.dart';
+import 'package:final_projek/widgets/readingStatusList/read_later_list.dart';
 import 'package:flutter/material.dart';
 
 class ReadingStatusPage extends StatefulWidget {
@@ -87,27 +91,15 @@ class _ReadingStatusPageState extends State<ReadingStatusPage>
 
             // Tab View
             SizedBox(
-              height: 100,
               width: double.infinity,
+              height: 600,
               child: TabBarView(
                 controller: _tabController,
                 children: const [
-                  ListTile(
-                    leading: CircleAvatar(),
-                    title: Text('content'),
-                  ),
-                  ListTile(
-                    leading: CircleAvatar(),
-                    title: Text('content1'),
-                  ),
-                  ListTile(
-                    leading: CircleAvatar(),
-                    title: Text('content2'),
-                  ),
-                  ListTile(
-                    leading: CircleAvatar(),
-                    title: Text('content3'),
-                  ),
+                  CurretlyReadingList(),
+                  LaterList(),
+                  FinishedList(),
+                  GiveUpList()
                 ],
               ),
             ),

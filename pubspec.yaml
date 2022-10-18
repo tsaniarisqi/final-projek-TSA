@@ -38,6 +38,8 @@ dependencies:
   firebase_core: ^1.24.0
   firebase_auth: ^3.4.2
   google_sign_in: ^5.4.2
+  cloud_firestore: ^3.5.1
+  cloud_firestore_web: ^2.8.10
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,7 @@ flutter:
     - img/check.png
     - img/person.png
     - img/person2.png
+    - img/cover.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

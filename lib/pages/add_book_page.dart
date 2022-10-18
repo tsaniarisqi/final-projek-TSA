@@ -1,3 +1,5 @@
+import 'package:final_projek/pages/main_page.dart';
+import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
 
 class AddPage extends StatefulWidget {
@@ -8,6 +10,9 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
+  final titleController = TextEditingController();
+  final authorController = TextEditingController();
+  final totalPageController = TextEditingController();
   final readingStatusList = [
     'Currently Reading',
     'To Read Later',
@@ -42,6 +47,7 @@ class _AddPageState extends State<AddPage> {
                 ),
                 TextFormField(
                   autofocus: true,
+                  controller: titleController,
                   decoration: InputDecoration(
                     labelText: 'Title',
                     enabledBorder: OutlineInputBorder(
@@ -62,6 +68,7 @@ class _AddPageState extends State<AddPage> {
                 ),
                 TextFormField(
                   autofocus: true,
+                  controller: authorController,
                   decoration: InputDecoration(
                     labelText: 'Author',
                     enabledBorder: OutlineInputBorder(
@@ -82,6 +89,7 @@ class _AddPageState extends State<AddPage> {
                 ),
                 TextFormField(
                   autofocus: true,
+                  controller: totalPageController,
                   decoration: InputDecoration(
                     labelText: 'Total Page',
                     enabledBorder: OutlineInputBorder(
@@ -99,7 +107,6 @@ class _AddPageState extends State<AddPage> {
 
                 // reading status dropdown
                 DropdownButtonFormField(
-                  autofocus: true,
                   items: readingStatusList
                       .map(
                         (e) => DropdownMenuItem(child: Text(e), value: e),
@@ -126,7 +133,38 @@ class _AddPageState extends State<AddPage> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      if (selectedVal != null) {
+                        await Book.addBook(
+                          title: titleController.text,
+                          author: authorController.text,
+                          totalPage: int.tryParse(totalPageController.text),
+                          readingStatus: selectedVal,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainPage(),
+                          ),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("Message"),
+                            content: Text("Please choose a category"),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("OK"),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    },
                     child: const Text(
                       'Submit',
                     ),
