@@ -1,3 +1,5 @@
+import 'package:final_projek/pages/reading_status_page.dart';
+import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
 
 class DetailCurrentlyReadingBook extends StatefulWidget {
@@ -73,6 +75,28 @@ class _DetailCurrentlyReadingBookState
                   // if value 2 show dialog
                 } else if (value == 2) {
                   // delete book
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Delete"),
+                      content: const Text("Are you sure to delete this book? "),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await Book.deleteBook(docId: widget.documentId);
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Yes"),
+                        ),
+                      ],
+                    ),
+                  );
                 }
               },
             ),
@@ -99,7 +123,8 @@ class _DetailCurrentlyReadingBookState
                 child: Center(
                   child: Text(
                     widget.title,
-                    style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

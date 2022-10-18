@@ -1,4 +1,3 @@
-import 'package:final_projek/pages/main_page.dart';
 import 'package:final_projek/widgets/readingStatusList/currenty_reading_list.dart';
 import 'package:final_projek/widgets/readingStatusList/finished_list.dart';
 import 'package:final_projek/widgets/readingStatusList/give_up_list.dart';
@@ -47,8 +46,7 @@ class _ReadingStatusPageState extends State<ReadingStatusPage>
                   color: Colors.black45,
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (contex) => const MainPage()));
+                  Navigator.pop(context);
                 },
               ),
               contentPadding: const EdgeInsets.only(top: 0, left: 0, right: 0),

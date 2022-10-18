@@ -72,4 +72,17 @@ class Book {
         .orderBy('title')
         .snapshots();
   }
+
+  // delete book
+  static Future<void> deleteBook({
+    String? docId,
+  }) async {
+    DocumentReference documentReferencer =
+        _mainCollection.doc(user?.uid).collection('books').doc(docId);
+
+    await documentReferencer
+        .delete()
+        .whenComplete(() => print('Book deleted from the database'))
+        .catchError((e) => print(e));
+  }
 }
