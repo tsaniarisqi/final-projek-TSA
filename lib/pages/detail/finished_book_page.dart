@@ -1,3 +1,4 @@
+import 'package:final_projek/pages/edit_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
 
@@ -6,13 +7,16 @@ class DetailFinishedBook extends StatefulWidget {
   final String title;
   final String author;
   final int totalPage;
-  const DetailFinishedBook(
-      {Key? key,
-      required this.documentId,
-      required this.title,
-      required this.author,
-      required this.totalPage})
-      : super(key: key);
+  final String readingStatus;
+
+  const DetailFinishedBook({
+    Key? key,
+    required this.documentId,
+    required this.title,
+    required this.author,
+    required this.totalPage,
+    required this.readingStatus,
+  }) : super(key: key);
 
   @override
   State<DetailFinishedBook> createState() => _DetailFinishedBookState();
@@ -63,12 +67,18 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
               onSelected: (value) {
                 // if value 1 show dialog
                 if (value == 1) {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => HomePage(),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditPage(
+                        documentId: widget.documentId,
+                        currentTitle: widget.title,
+                        currentAuthor: widget.author,
+                        currentTotalPage: widget.totalPage,
+                        currentReadingStatus: widget.readingStatus,
+                      ),
+                    ),
+                  );
                   // if value 2 show dialog
                 } else if (value == 2) {
                   // delete book

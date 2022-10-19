@@ -8,11 +8,12 @@ final user = FirebaseAuth.instance.currentUser;
 
 class Book {
   // tambah data buku
-  static Future<void> addBook(
-      {String? title,
-      String? author,
-      int? totalPage,
-      String? readingStatus}) async {
+  static Future<void> addBook({
+    String? title,
+    String? author,
+    int? totalPage,
+    String? readingStatus,
+  }) async {
     DocumentReference documentReferencer =
         _mainCollection.doc(user?.uid).collection('books').doc();
 
@@ -83,6 +84,31 @@ class Book {
     await documentReferencer
         .delete()
         .whenComplete(() => print('Book deleted from the database'))
+        .catchError((e) => print(e));
+  }
+
+  // edit book
+  static Future<void> updateBook({
+    String? title,
+    String? author,
+    int? totalPage,
+    String? readingStatus,
+    String? docID,
+  }) async {
+    DocumentReference documentReferencer =
+        _mainCollection.doc(user?.uid).collection('books').doc(docID);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "title": title,
+      "author": author,
+      "totalPage": totalPage,
+      "readingStatus": readingStatus
+    };
+
+    await documentReferencer
+        .update(data)
+        // .set(data, SetOptions(merge: true))
+        .whenComplete(() => print("Book updated in the database"))
         .catchError((e) => print(e));
   }
 }
