@@ -1,6 +1,7 @@
 import 'package:final_projek/pages/add_note_page.dart';
 import 'package:final_projek/pages/edit_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
+import 'package:final_projek/widgets/note_list.dart';
 import 'package:flutter/material.dart';
 
 class DetailReadLaterBook extends StatefulWidget {
@@ -124,75 +125,90 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
             );
           },
         ),
-        body: Padding(
+        body: ListView(
           padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              // cover
-              const Padding(
-                padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                child: Center(
-                  child: Image(
-                    height: 300,
-                    image: AssetImage('img/cover.jpeg'),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // cover
+                const Padding(
+                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: Center(
+                    child: Image(
+                      height: 300,
+                      image: AssetImage('img/cover.jpeg'),
+                    ),
                   ),
                 ),
-              ),
-              // title
-              Padding(
-                padding: EdgeInsets.only(bottom: 4.0),
-                child: Center(
-                  child: Text(
-                    widget.title,
-                    style: const TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              // author
-              Padding(
-                padding: EdgeInsets.only(bottom: 8.0),
-                child: Center(
-                  child: Text(
-                    widget.author,
-                    style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black45),
-                  ),
-                ),
-              ),
-              //status
-              const Center(
-                child: Text(
-                  'To Read Later',
-                  style: TextStyle(fontSize: 18, color: Colors.black45),
-                ),
-              ),
-
-              // button
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                width: double.infinity,
-                child: ElevatedButton(
-                  child: const Padding(
-                    padding: EdgeInsets.all(15.0),
+                // title
+                Padding(
+                  padding: EdgeInsets.only(bottom: 4.0),
+                  child: Center(
                     child: Text(
-                      'Start',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      widget.title,
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+                // author
+                Padding(
+                  padding: EdgeInsets.only(bottom: 8.0),
+                  child: Center(
+                    child: Text(
+                      widget.author,
+                      style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black45),
+                    ),
+                  ),
+                ),
+                //status
+                const Center(
+                  child: Text(
+                    'To Read Later',
+                    style: TextStyle(fontSize: 18, color: Colors.black45),
+                  ),
+                ),
+                // button
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    child: const Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Text(
+                        'Start',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                //notes
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Notes',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 600,
+                  child: NoteList(documentId: widget.documentId),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

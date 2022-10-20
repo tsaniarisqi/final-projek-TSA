@@ -26,7 +26,20 @@ class Note {
         .collection('notes')
         .doc()
         .set(data)
-        .whenComplete(() => print("Book detail added to the database"))
+        .whenComplete(() => print("Note detail added to the database"))
         .catchError((e) => print(e));
+  }
+
+  // read Give Up book
+  static Stream<QuerySnapshot> readNote(String documentId) {
+    // String? documentId;
+
+    CollectionReference noteCollection = _mainCollection
+        .doc(user?.uid)
+        .collection('books')
+        .doc(documentId)
+        .collection('notes');
+
+    return noteCollection.orderBy('date').snapshots();
   }
 }
