@@ -1,3 +1,4 @@
+import 'package:final_projek/pages/add_note_page.dart';
 import 'package:final_projek/pages/edit_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
@@ -110,6 +111,19 @@ class _DetailCurrentlyReadingBookState
               },
             ),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          foregroundColor: Colors.white,
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AddNote(
+                  documentId: widget.documentId,
+                ),
+              ),
+            );
+          },
         ),
         body: Padding(
           padding: const EdgeInsets.all(8),
