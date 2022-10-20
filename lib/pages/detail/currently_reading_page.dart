@@ -112,6 +112,7 @@ class _DetailCurrentlyReadingBookState
             ),
           ],
         ),
+        // button add note
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.white,
           child: const Icon(Icons.add),
