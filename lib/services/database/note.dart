@@ -42,4 +42,23 @@ class Note {
 
     return noteCollection.orderBy('date').snapshots();
   }
+
+  // delete book
+  static Future<void> deleteBook(bookId, noteId) async {
+    // String? bookId,
+    // String? noteId
+    {
+      DocumentReference documentReferencer = _mainCollection
+          .doc(user?.uid)
+          .collection('books')
+          .doc(bookId)
+          .collection('notes')
+          .doc(noteId);
+
+      await documentReferencer
+          .delete()
+          .whenComplete(() => print('Note deleted from the database'))
+          .catchError((e) => print(e));
+    }
+  }
 }

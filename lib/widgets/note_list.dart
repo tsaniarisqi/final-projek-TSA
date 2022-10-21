@@ -3,16 +3,16 @@ import 'package:final_projek/services/database/note.dart';
 import 'package:flutter/material.dart';
 
 class NoteList extends StatelessWidget {
-  final documentId;
+  final bookId;
   const NoteList({
     Key? key,
-    this.documentId,
+    this.bookId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Note.readNote(documentId),
+      stream: Note.readNote(bookId),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
@@ -21,7 +21,7 @@ class NoteList extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final documentSnapshot = snapshot.data!.docs[index];
-              // final String docId = snapshot.data!.docs[index].id;
+              final String noteId = snapshot.data!.docs[index].id;
               String note = documentSnapshot['note'];
               int page = documentSnapshot['page'];
               String date = documentSnapshot['date'];
@@ -45,13 +45,92 @@ class NoteList extends StatelessWidget {
                               color: Colors.black54,
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.more_vert,
-                              size: 18,
-                            ),
+                          PopupMenuButton<int>(
+                            itemBuilder: (context) => [
+                              // PopupMenuItem 1
+                              PopupMenuItem(
+                                value: 1,
+                                // row with 2 children
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.edit),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text("Edit This Book")
+                                  ],
+                                ),
+                              ),
+                              // PopupMenuItem 2
+                              PopupMenuItem(
+                                value: 2,
+                                // row with two children
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.delete),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text("Delete This Book")
+                                  ],
+                                ),
+                              ),
+                            ],
+                            color: Colors.white,
+                            elevation: 2,
+                            // on selected we show the dialog box
+                            onSelected: (value) {
+                              // if value 1 show dialog
+                              if (value == 1) {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => EditPage(
+                                //       documentId: widget.documentId,
+                                //       currentTitle: widget.title,
+                                //       currentAuthor: widget.author,
+                                //       currentTotalPage: widget.totalPage,
+                                //       currentReadingStatus: widget.readingStatus,
+                                //     ),
+                                //   ),
+                                // );
+                                // if value 2 show dialog
+                              } else if (value == 2) {
+                                // delete book
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Delete"),
+                                    content: const Text(
+                                        "Are you sure to delete this book? "),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          await Note.deleteBook(bookId, noteId);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Yes"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
                           ),
+
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: const Icon(
+                          //     Icons.more_vert,
+                          //     size: 18,
+                          //   ),
+                          // ),
                         ],
                       ),
                       Padding(

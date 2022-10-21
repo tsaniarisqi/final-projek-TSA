@@ -202,8 +202,8 @@ class _DetailCurrentlyReadingBookState
                 ),
                 SizedBox(
                   width: double.infinity,
-                  height: 600,
-                  child: NoteList(documentId: widget.documentId),
+                  height: 500,
+                  child: NoteList(bookId: widget.documentId),
                 ),
               ],
             ),
