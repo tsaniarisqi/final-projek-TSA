@@ -61,4 +61,32 @@ class Note {
           .catchError((e) => print(e));
     }
   }
+
+  // edit note
+  static Future<void> updateNote({
+    String? note,
+    int? page,
+    String? date,
+    String? bookId,
+    String? noteId,
+  }) async {
+    DocumentReference documentReferencer = _mainCollection
+        .doc(user?.uid)
+        .collection('books')
+        .doc(bookId)
+        .collection('notes')
+        .doc(noteId);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      'note': note,
+      'page': page,
+      'date': date,
+    };
+
+    await documentReferencer
+        .update(data)
+        // .set(data, SetOptions(merge: true))
+        .whenComplete(() => print("Note updated in the database"))
+        .catchError((e) => print(e));
+  }
 }

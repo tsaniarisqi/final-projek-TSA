@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_projek/pages/edit_note_page.dart';
 import 'package:final_projek/services/database/note.dart';
 import 'package:flutter/material.dart';
 
@@ -82,18 +83,18 @@ class NoteList extends StatelessWidget {
                             onSelected: (value) {
                               // if value 1 show dialog
                               if (value == 1) {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => EditPage(
-                                //       documentId: widget.documentId,
-                                //       currentTitle: widget.title,
-                                //       currentAuthor: widget.author,
-                                //       currentTotalPage: widget.totalPage,
-                                //       currentReadingStatus: widget.readingStatus,
-                                //     ),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditNotePage(
+                                      noteId: noteId,
+                                      bookId: bookId,
+                                      currentNote: note,
+                                      currentPage: page,
+                                      currentDate: date,
+                                    ),
+                                  ),
+                                );
                                 // if value 2 show dialog
                               } else if (value == 2) {
                                 // delete book
