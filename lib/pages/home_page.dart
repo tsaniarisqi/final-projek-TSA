@@ -1,4 +1,8 @@
 import 'package:final_projek/widgets/progres_bar.dart';
+import 'package:final_projek/widgets/readingStatusCard/currently_reading_card.dart';
+import 'package:final_projek/widgets/readingStatusCard/finished_card.dart';
+import 'package:final_projek/widgets/readingStatusCard/give_up_card.dart';
+import 'package:final_projek/widgets/readingStatusCard/read_later_card.dart';
 import 'package:final_projek/widgets/reading_status.dart';
 import 'package:flutter/material.dart';
 
@@ -50,13 +54,13 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 24,
               ),
-              
+
               // progress bar
               const ProgressBar(),
               const SizedBox(
                 height: 16,
               ),
-              
+
               // reading status
               Expanded(
                 child: GridView.count(
@@ -64,26 +68,10 @@ class _HomePageState extends State<HomePage> {
                   crossAxisSpacing: 24,
                   mainAxisSpacing: 24,
                   children: const [
-                    StatusCard(
-                      img: 'img/book.png',
-                      title: '10',
-                      subTitle: 'Currenty Reading',
-                    ),
-                    StatusCard(
-                      img: 'img/books.png',
-                      title: '10',
-                      subTitle: 'To Read Later',
-                    ),
-                    StatusCard(
-                      img: 'img/check.png',
-                      title: '10',
-                      subTitle: 'Finished',
-                    ),
-                    StatusCard(
-                      img: 'img/cancel.png',
-                      title: '10',
-                      subTitle: 'Give Up',
-                    ),
+                    CurrentlyReadingCard(),
+                    ReadLateCard(),
+                    FinishedCard(),
+                    GiveUpCard(),
                   ],
                 ),
               )

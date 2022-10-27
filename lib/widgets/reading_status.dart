@@ -20,6 +20,7 @@ class StatusCard extends StatelessWidget {
             MaterialPageRoute(builder: (contex) => ReadingStatusPage()));
       },
       child: Container(
+        height: 140,
         decoration: BoxDecoration(
           color: Colors.white,
           // color: const Color(0xffF4E6BE),
