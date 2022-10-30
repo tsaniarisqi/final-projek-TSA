@@ -10,6 +10,8 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
+  final _addBookFormKey = GlobalKey<FormState>();
+
   final titleController = TextEditingController();
   final authorController = TextEditingController();
   final totalPageController = TextEditingController();
@@ -26,6 +28,7 @@ class _AddPageState extends State<AddPage> {
     return SafeArea(
       child: Scaffold(
         body: Form(
+          key: _addBookFormKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -35,9 +38,10 @@ class _AddPageState extends State<AddPage> {
                 const Text(
                   'Add a Book',
                   style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
                 ),
                 const SizedBox(
                   height: 8,
@@ -57,6 +61,12 @@ class _AddPageState extends State<AddPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please fill this section';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -78,6 +88,12 @@ class _AddPageState extends State<AddPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please fill this section';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -88,6 +104,7 @@ class _AddPageState extends State<AddPage> {
                   height: 8,
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   autofocus: true,
                   controller: totalPageController,
                   decoration: InputDecoration(
@@ -100,6 +117,12 @@ class _AddPageState extends State<AddPage> {
                     ),
                     focusColor: const Color(0xffC5930B),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please fill this section';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -123,6 +146,12 @@ class _AddPageState extends State<AddPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please choose this reading status';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -134,7 +163,7 @@ class _AddPageState extends State<AddPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (selectedVal != null) {
+                      if (_addBookFormKey.currentState!.validate()) {
                         await Book.addBook(
                           title: titleController.text,
                           author: authorController.text,
@@ -147,20 +176,9 @@ class _AddPageState extends State<AddPage> {
                             builder: (context) => const MainPage(),
                           ),
                         );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text("Message"),
-                            content: Text("Please choose a category"),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text("OK"),
-                              )
-                            ],
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Book added successfully'),
                           ),
                         );
                       }

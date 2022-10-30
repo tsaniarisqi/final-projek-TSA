@@ -11,6 +11,8 @@ class AddNote extends StatefulWidget {
 }
 
 class _AddNoteState extends State<AddNote> {
+  final _addNoteFormKey = GlobalKey<FormState>();
+
   final noteController = TextEditingController();
   final pageController = TextEditingController();
   final dateController = TextEditingController();
@@ -36,6 +38,7 @@ class _AddNoteState extends State<AddNote> {
     return SafeArea(
       child: Scaffold(
         body: Form(
+          key: _addNoteFormKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
@@ -45,9 +48,10 @@ class _AddNoteState extends State<AddNote> {
                 const Text(
                   'Add a Note',
                   style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
                 ),
                 const SizedBox(
                   height: 8,
@@ -67,6 +71,12 @@ class _AddNoteState extends State<AddNote> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please fill this section';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -89,6 +99,12 @@ class _AddNoteState extends State<AddNote> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please fill this section';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 16,
@@ -98,12 +114,12 @@ class _AddNoteState extends State<AddNote> {
                 const SizedBox(
                   height: 8,
                 ),
-                TextField(
+                TextFormField(
                   autofocus: true,
                   controller: dateController,
                   decoration: InputDecoration(
                     labelText: 'Date',
-                    suffixIcon: Icon(Icons.calendar_today_rounded),
+                    suffixIcon: const Icon(Icons.calendar_today_rounded),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -112,6 +128,12 @@ class _AddNoteState extends State<AddNote> {
                     ),
                     hintText: 'Choose Date',
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please fill this section';
+                    }
+                    return null;
+                  },
                   onTap: () {
                     // Below line stops keyboard from appearing
                     FocusScope.of(context).requestFocus(FocusNode());
@@ -128,13 +150,20 @@ class _AddNoteState extends State<AddNote> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await Note.addNote(
-                        note: noteController.text,
-                        page: int.tryParse(pageController.text),
-                        date: dateController.text,
-                        docId: widget.documentId,
-                      );
-                      Navigator.pop(context);
+                      if (_addNoteFormKey.currentState!.validate()) {
+                        await Note.addNote(
+                          note: noteController.text,
+                          page: int.tryParse(pageController.text),
+                          date: dateController.text,
+                          docId: widget.documentId,
+                        );
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Note added successfully'),
+                          ),
+                        );
+                      }
                     },
                     child: const Text(
                       'Submit',
