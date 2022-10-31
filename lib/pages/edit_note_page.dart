@@ -59,141 +59,143 @@ class _EditNotePageState extends State<EditNotePage> {
         body: Form(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // title form
-                const Text(
-                  'Edit a Note',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  autofocus: true,
-                  controller: noteController,
-                  decoration: InputDecoration(
-                    labelText: 'Note',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // title form
+                  const Text(
+                    'Edit a Note',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-
-                // author form
-                const SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  autofocus: true,
-                  controller: pageController,
-                  decoration: InputDecoration(
-                    labelText: 'Page',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
+                  const SizedBox(
+                    height: 8,
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-
-                // number of page forms
-                const SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  autofocus: true,
-                  controller: dateController,
-                  decoration: InputDecoration(
-                    labelText: 'Date',
-                    suffixIcon: Icon(Icons.calendar_today_rounded),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusColor: const Color(0xffC5930B),
+                  const SizedBox(
+                    height: 8,
                   ),
-                  onTap: () {
-                    // Below line stops keyboard from appearing
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    _showDatePicker();
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      // tombol batal
-                      Container(
-                        width: 150,
-                        height: 50,
-                        child: ElevatedButton(
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                letterSpacing: 3),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
+                  TextFormField(
+                    autofocus: true,
+                    controller: noteController,
+                    decoration: InputDecoration(
+                      labelText: 'Note',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      // tombol simpan
-                      Container(
-                        width: 150,
-                        height: 50,
-                        child: ElevatedButton(
-                          child: const Text(
-                            'Update',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                letterSpacing: 3),
-                          ),
-                          onPressed: () async {
-                            await Note.updateNote(
-                              note: noteController.text,
-                              page: int.tryParse(pageController.text),
-                              date: dateController.text,
-                              noteId: widget.noteId,
-                              bookId: widget.bookId,
-                            );
-                            Navigator.of(context).pop();
-                          },
-                        ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // author form
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    autofocus: true,
+                    controller: pageController,
+                    decoration: InputDecoration(
+                      labelText: 'Page',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // number of page forms
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    autofocus: true,
+                    controller: dateController,
+                    decoration: InputDecoration(
+                      labelText: 'Date',
+                      suffixIcon: Icon(Icons.calendar_today_rounded),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusColor: const Color(0xffC5930B),
+                    ),
+                    onTap: () {
+                      // Below line stops keyboard from appearing
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _showDatePicker();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        // tombol batal
+                        Container(
+                          width: 150,
+                          height: 50,
+                          child: ElevatedButton(
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  letterSpacing: 3),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        // tombol simpan
+                        Container(
+                          width: 150,
+                          height: 50,
+                          child: ElevatedButton(
+                            child: const Text(
+                              'Update',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  letterSpacing: 3),
+                            ),
+                            onPressed: () async {
+                              await Note.updateNote(
+                                note: noteController.text,
+                                page: int.tryParse(pageController.text),
+                                date: dateController.text,
+                                noteId: widget.noteId,
+                                bookId: widget.bookId,
+                              );
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

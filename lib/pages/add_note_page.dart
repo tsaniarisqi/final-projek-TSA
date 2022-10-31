@@ -41,141 +41,143 @@ class _AddNoteState extends State<AddNote> {
           key: _addNoteFormKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // title form
-                const Text(
-                  'Add a Note',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  autofocus: true,
-                  controller: noteController,
-                  decoration: InputDecoration(
-                    labelText: 'Note',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // title form
+                  const Text(
+                    'Add a Note',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
                     ),
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please fill this section';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-
-                // Page form
-                const SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.number,
-                  autofocus: true,
-                  controller: pageController,
-                  decoration: InputDecoration(
-                    labelText: 'Page',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
+                  const SizedBox(
+                    height: 8,
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please fill this section';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-
-                // date
-                const SizedBox(
-                  height: 8,
-                ),
-                TextFormField(
-                  autofocus: true,
-                  controller: dateController,
-                  decoration: InputDecoration(
-                    labelText: 'Date',
-                    suffixIcon: const Icon(Icons.calendar_today_rounded),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    hintText: 'Choose Date',
+                  const SizedBox(
+                    height: 8,
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please fill this section';
-                    }
-                    return null;
-                  },
-                  onTap: () {
-                    // Below line stops keyboard from appearing
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    _showDatePicker();
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-
-                // submit button
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_addNoteFormKey.currentState!.validate()) {
-                        await Note.addNote(
-                          note: noteController.text,
-                          page: int.tryParse(pageController.text),
-                          date: dateController.text,
-                          docId: widget.documentId,
-                        );
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Note added successfully'),
-                          ),
-                        );
+                  TextFormField(
+                    autofocus: true,
+                    controller: noteController,
+                    decoration: InputDecoration(
+                      labelText: 'Note',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
                       }
+                      return null;
                     },
-                    child: const Text(
-                      'Submit',
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // Page form
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    autofocus: true,
+                    controller: pageController,
+                    decoration: InputDecoration(
+                      labelText: 'Page',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // date
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    autofocus: true,
+                    controller: dateController,
+                    decoration: InputDecoration(
+                      labelText: 'Date',
+                      suffixIcon: const Icon(Icons.calendar_today_rounded),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      hintText: 'Choose Date',
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                    onTap: () {
+                      // Below line stops keyboard from appearing
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _showDatePicker();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // submit button
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_addNoteFormKey.currentState!.validate()) {
+                          await Note.addNote(
+                            note: noteController.text,
+                            page: int.tryParse(pageController.text),
+                            date: dateController.text,
+                            docId: widget.documentId,
+                          );
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Note added successfully'),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text(
+                        'Submit',
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
