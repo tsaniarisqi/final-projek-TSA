@@ -10,6 +10,7 @@ class DetailCurrentlyReadingBook extends StatefulWidget {
   final String author;
   final int totalPage;
   final String readingStatus;
+  final String urlCoverBook;
 
   const DetailCurrentlyReadingBook({
     Key? key,
@@ -18,6 +19,7 @@ class DetailCurrentlyReadingBook extends StatefulWidget {
     required this.author,
     required this.totalPage,
     required this.readingStatus,
+    required this.urlCoverBook,
   }) : super(key: key);
 
   @override
@@ -100,7 +102,10 @@ class _DetailCurrentlyReadingBookState
                         ),
                         TextButton(
                           onPressed: () async {
-                            await Book.deleteBook(docId: widget.documentId);
+                            await Book.deleteBook(
+                              docId: widget.documentId,
+                              title: widget.title,
+                            );
                             Navigator.pop(context);
                           },
                           child: const Text("Yes"),
@@ -134,12 +139,12 @@ class _DetailCurrentlyReadingBookState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // cover
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: Center(
                     child: Image(
                       height: 300,
-                      image: AssetImage('img/cover.jpeg'),
+                      image: NetworkImage(widget.urlCoverBook),
                     ),
                   ),
                 ),

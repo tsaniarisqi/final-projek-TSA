@@ -23,6 +23,7 @@ class FinishedList extends StatelessWidget {
               String author = documentSnapshot['author'];
               int totalPage = documentSnapshot['totalPage'];
               String readingStatus = documentSnapshot['readingStatus'];
+              String urlCoverBook = documentSnapshot['bookCover'];
 
               return GestureDetector(
                 onTap: () {
@@ -35,6 +36,7 @@ class FinishedList extends StatelessWidget {
                         author: author,
                         totalPage: totalPage,
                         readingStatus: readingStatus,
+                        urlCoverBook: urlCoverBook,
                       ),
                     ),
                   );
@@ -50,9 +52,9 @@ class FinishedList extends StatelessWidget {
                         Container(
                           width: 90,
                           height: 120,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('img/cover.jpeg'),
+                              image: NetworkImage(urlCoverBook),
                             ),
                           ),
                         ),

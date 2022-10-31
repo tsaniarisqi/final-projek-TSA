@@ -20,6 +20,7 @@ class GiveUpList extends StatelessWidget {
               String title = documentSnapshot['title'];
               String author = documentSnapshot['author'];
               int totalPage = documentSnapshot['totalPage'];
+              String urlCoverBook = documentSnapshot['bookCover'];
 
               return Card(
                 margin: const EdgeInsets.only(top: 8),
@@ -32,9 +33,9 @@ class GiveUpList extends StatelessWidget {
                       Container(
                         width: 90,
                         height: 120,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('img/cover.jpeg'),
+                            image: NetworkImage(urlCoverBook),
                           ),
                         ),
                       ),

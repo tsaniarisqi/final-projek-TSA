@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection =
@@ -13,17 +16,23 @@ class Book {
     String? author,
     int? totalPage,
     String? readingStatus,
+    String? urlBookCover,
+    File? bookCover,
   }) async {
     DocumentReference documentReferencer =
         _mainCollection.doc(user?.uid).collection('books').doc();
+    final ref =
+        FirebaseStorage.instance.ref().child('cover').child(title! + '.jpg');
+    await ref.putFile(bookCover!);
+    urlBookCover = await ref.getDownloadURL();
 
     Map<String, dynamic> data = <String, dynamic>{
       "title": title,
       "author": author,
       "totalPage": totalPage,
-      "readingStatus": readingStatus
+      "readingStatus": readingStatus,
+      "bookCover": urlBookCover
     };
-
     await documentReferencer
         .set(data)
         .whenComplete(() => print("Book detail added to the database"))
@@ -77,9 +86,13 @@ class Book {
   // delete book
   static Future<void> deleteBook({
     String? docId,
+    String? title,
   }) async {
     DocumentReference documentReferencer =
         _mainCollection.doc(user?.uid).collection('books').doc(docId);
+    final ref =
+        FirebaseStorage.instance.ref().child('cover').child(title! + '.jpg');
+    await ref.delete();
 
     await documentReferencer
         .delete()

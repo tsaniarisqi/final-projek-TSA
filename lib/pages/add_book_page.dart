@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:final_projek/pages/main_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _AddPageState extends State<AddPage> {
     'Give Up'
   ];
   String? selectedVal = '';
+  File? _pickedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,6 @@ class _AddPageState extends State<AddPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // title form
                 const Text(
                   'Add a Book',
                   style: TextStyle(
@@ -46,6 +49,8 @@ class _AddPageState extends State<AddPage> {
                 const SizedBox(
                   height: 8,
                 ),
+
+                // title form
                 const SizedBox(
                   height: 8,
                 ),
@@ -129,6 +134,9 @@ class _AddPageState extends State<AddPage> {
                 ),
 
                 // reading status dropdown
+                const SizedBox(
+                  height: 8,
+                ),
                 DropdownButtonFormField(
                   items: readingStatusList
                       .map(
@@ -154,6 +162,40 @@ class _AddPageState extends State<AddPage> {
                   },
                 ),
                 const SizedBox(
+                  height: 8,
+                ),
+
+                // Book Cover
+                const SizedBox(
+                  height: 8,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    final picker = ImagePicker();
+                    final pickedImage =
+                        await picker.pickImage(source: ImageSource.gallery);
+                    final pickedImageFile = File(pickedImage!.path);
+                    setState(() {
+                      _pickedImage = pickedImageFile;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xff707070).withOpacity(0.1),
+                    ),
+                    child: Column(
+                      children: const [
+                        Icon(Icons.upload_file),
+                        Text('Upload Image')
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
                   height: 16,
                 ),
 
@@ -163,12 +205,14 @@ class _AddPageState extends State<AddPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_addBookFormKey.currentState!.validate()) {
+                      if (_addBookFormKey.currentState!.validate() &&
+                          _pickedImage != null) {
                         await Book.addBook(
                           title: titleController.text,
                           author: authorController.text,
                           totalPage: int.tryParse(totalPageController.text),
                           readingStatus: selectedVal,
+                          bookCover: _pickedImage,
                         );
                         Navigator.push(
                           context,
