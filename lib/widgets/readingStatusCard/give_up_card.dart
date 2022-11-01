@@ -22,7 +22,7 @@ class _GiveUpCardState extends State<GiveUpCard> {
           final documentSnapshot = snapshot.data!.docs;
           var total = documentSnapshot.length.toString();
           return StatusCard(
-            img: 'img/cancel.png',
+            img: 'img/book_giveup.png',
             title: total.toString(),
             subTitle: 'Give Up',
           );

@@ -22,7 +22,7 @@ class _FinishedCardState extends State<FinishedCard> {
           final documentSnapshot = snapshot.data!.docs;
           var total = documentSnapshot.length.toString();
           return StatusCard(
-            img: 'img/check.png',
+            img: 'img/book_finished.png',
             title: total.toString(),
             subTitle: 'Finished',
           );
