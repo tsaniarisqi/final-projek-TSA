@@ -24,6 +24,8 @@ class EditNotePage extends StatefulWidget {
 }
 
 class _EditNotePageState extends State<EditNotePage> {
+  final _editNoteFormKey = GlobalKey<FormState>();
+
   late var noteController = TextEditingController();
   late var pageController = TextEditingController();
   late var dateController = TextEditingController();
@@ -57,13 +59,14 @@ class _EditNotePageState extends State<EditNotePage> {
     return SafeArea(
       child: Scaffold(
         body: Form(
+          key: _editNoteFormKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // title form
+                  // note
                   const Text(
                     'Edit a Note',
                     style: TextStyle(
@@ -90,12 +93,18 @@ class _EditNotePageState extends State<EditNotePage> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 16,
                   ),
 
-                  // author form
+                  // page
                   const SizedBox(
                     height: 8,
                   ),
@@ -112,12 +121,18 @@ class _EditNotePageState extends State<EditNotePage> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 16,
                   ),
 
-                  // number of page forms
+                  // date
                   const SizedBox(
                     height: 8,
                   ),
@@ -135,6 +150,12 @@ class _EditNotePageState extends State<EditNotePage> {
                       ),
                       focusColor: const Color(0xffC5930B),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
                     onTap: () {
                       // Below line stops keyboard from appearing
                       FocusScope.of(context).requestFocus(FocusNode());
@@ -180,14 +201,21 @@ class _EditNotePageState extends State<EditNotePage> {
                                   letterSpacing: 3),
                             ),
                             onPressed: () async {
-                              await Note.updateNote(
-                                note: noteController.text,
-                                page: int.tryParse(pageController.text),
-                                date: dateController.text,
-                                noteId: widget.noteId,
-                                bookId: widget.bookId,
-                              );
-                              Navigator.of(context).pop();
+                              if (_editNoteFormKey.currentState!.validate()) {
+                                await Note.updateNote(
+                                  note: noteController.text,
+                                  page: int.tryParse(pageController.text),
+                                  date: dateController.text,
+                                  noteId: widget.noteId,
+                                  bookId: widget.bookId,
+                                );
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Note edited successfully'),
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),

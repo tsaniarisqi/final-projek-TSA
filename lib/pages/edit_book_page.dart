@@ -22,6 +22,8 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
+  final _editBookFormKey = GlobalKey<FormState>();
+
   late var titleController = TextEditingController();
   late var authorController = TextEditingController();
   late var totalPageController = TextEditingController();
@@ -50,6 +52,7 @@ class _EditPageState extends State<EditPage> {
     return SafeArea(
       child: Scaffold(
         body: Form(
+          key: _editBookFormKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
@@ -83,6 +86,12 @@ class _EditPageState extends State<EditPage> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 16,
@@ -104,6 +113,12 @@ class _EditPageState extends State<EditPage> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 16,
@@ -126,6 +141,12 @@ class _EditPageState extends State<EditPage> {
                       ),
                       focusColor: const Color(0xffC5930B),
                     ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 16,
@@ -133,6 +154,7 @@ class _EditPageState extends State<EditPage> {
 
                   // reading status dropdown
                   DropdownButtonFormField(
+                    value: selectedVal,
                     items: readingStatusList
                         .map(
                           (e) => DropdownMenuItem(child: Text(e), value: e),
@@ -140,7 +162,7 @@ class _EditPageState extends State<EditPage> {
                         .toList(),
                     onChanged: (val) {
                       setState(() {
-                        selectedVal = val as String;
+                        selectedVal = val as String?;
                       });
                     },
                     decoration: InputDecoration(
@@ -149,6 +171,12 @@ class _EditPageState extends State<EditPage> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please choose this reading status';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 16,
@@ -189,7 +217,7 @@ class _EditPageState extends State<EditPage> {
                                   letterSpacing: 3),
                             ),
                             onPressed: () async {
-                              if (selectedVal != null) {
+                              if (_editBookFormKey.currentState!.validate()) {
                                 await Book.updateBook(
                                   title: titleController.text,
                                   author: authorController.text,
@@ -199,20 +227,9 @@ class _EditPageState extends State<EditPage> {
                                   docID: widget.documentId,
                                 );
                                 Navigator.of(context).pop();
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text("Message"),
-                                    content: Text("Please choose a category"),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("OK"),
-                                      )
-                                    ],
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Book edited successfully'),
                                   ),
                                 );
                               }

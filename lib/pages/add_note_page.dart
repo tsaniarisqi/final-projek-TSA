@@ -45,7 +45,7 @@ class _AddNoteState extends State<AddNote> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // title form
+                  // note
                   const Text(
                     'Add a Note',
                     style: TextStyle(
@@ -83,7 +83,7 @@ class _AddNoteState extends State<AddNote> {
                     height: 16,
                   ),
 
-                  // Page form
+                  // page
                   const SizedBox(
                     height: 8,
                   ),
