@@ -238,7 +238,13 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      await Book.startReading(
+                        readingStatus: 'Currently Reading',
+                        docID: widget.documentId,
+                      );
+                      Navigator.of(context).pop();
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

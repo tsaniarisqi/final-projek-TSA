@@ -124,4 +124,23 @@ class Book {
         .whenComplete(() => print("Book updated in the database"))
         .catchError((e) => print(e));
   }
+
+  // Button Start Reading
+  static Future<void> startReading({
+    String? readingStatus,
+    String? docID,
+  }) async {
+    DocumentReference documentReferencer =
+        _mainCollection.doc(user?.uid).collection('books').doc(docID);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "readingStatus": readingStatus
+    };
+
+    await documentReferencer
+        .update(data)
+        // .set(data, SetOptions(merge: true))
+        .whenComplete(() => print("Book updated in the database"))
+        .catchError((e) => print(e));
+  }
 }
