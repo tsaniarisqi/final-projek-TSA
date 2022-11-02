@@ -34,7 +34,16 @@ class _DetailCurrentlyReadingBookState
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Detail'),
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          title: const Text(
+            'Detail',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
           actions: [
             PopupMenuButton<int>(
               itemBuilder: (context) => [
@@ -133,61 +142,105 @@ class _DetailCurrentlyReadingBookState
           },
         ),
         body: ListView(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(24),
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // cover
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: Center(
-                    child: Image(
-                      height: 300,
-                      image: NetworkImage(widget.urlCoverBook),
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 30,
+                      top: 8,
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.32,
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 29,
+                                offset: const Offset(8, 8),
+                                spreadRadius: 3,
+                              ),
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 25,
+                                offset: const Offset(-8, -8),
+                                // spreadRadius: 3,
+                              )
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image(
+                              image: NetworkImage(
+                                widget.urlCoverBook,
+                              ),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 // title
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0),
-                  child: Center(
-                    child: Text(
-                      widget.title,
-                      style: const TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.w600),
+                Center(
+                  child: Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 8,
+                ),
                 // author
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Center(
-                    child: Text(
-                      widget.author,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black45),
+                Center(
+                  child: Text(
+                    'By ' + widget.author,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black45,
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 8,
                 ),
                 //status
                 const Center(
                   child: Text(
                     'Currently Reading',
-                    style: TextStyle(fontSize: 18, color: Colors.black45),
+                    style: TextStyle(fontSize: 15, color: Colors.black45),
                   ),
                 ),
                 // Progres Page
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Pages', style: TextStyle(fontSize: 17)),
-                    const Text(' 20',
-                        style: TextStyle(fontSize: 20, color: Colors.amber)),
-                    Text('/ ' + widget.totalPage.toString(),
-                        style: const TextStyle(fontSize: 17)),
+                    const Text('Pages ', style: TextStyle(fontSize: 17)),
+                    const Text(
+                      '20 ',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    Text(
+                      '/ ' + widget.totalPage.toString(),
+                      style: const TextStyle(fontSize: 17),
+                    ),
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(
@@ -198,12 +251,9 @@ class _DetailCurrentlyReadingBookState
                   ],
                 ),
                 //notes
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Notes',
-                    style: TextStyle(fontSize: 20),
-                  ),
+                const Text(
+                  'Notes',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(
                   width: double.infinity,

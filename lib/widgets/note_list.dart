@@ -28,8 +28,11 @@ class NoteList extends StatelessWidget {
               String date = documentSnapshot['date'];
 
               return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  padding: const EdgeInsets.only(left: 8, bottom: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -58,7 +61,7 @@ class NoteList extends StatelessWidget {
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Text("Edit This Book")
+                                    Text("Edit This Note")
                                   ],
                                 ),
                               ),
@@ -72,13 +75,14 @@ class NoteList extends StatelessWidget {
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Text("Delete This Book")
+                                    Text("Delete This Note")
                                   ],
                                 ),
                               ),
                             ],
                             color: Colors.white,
                             elevation: 2,
+                            iconSize: 15,
                             // on selected we show the dialog box
                             onSelected: (value) {
                               // if value 1 show dialog
@@ -103,7 +107,8 @@ class NoteList extends StatelessWidget {
                                   builder: (context) => AlertDialog(
                                     title: const Text("Delete"),
                                     content: const Text(
-                                        "Are you sure to delete this book? "),
+                                      "Are you sure to delete this note? ",
+                                    ),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
@@ -124,27 +129,16 @@ class NoteList extends StatelessWidget {
                               }
                             },
                           ),
-
-                          // IconButton(
-                          //   onPressed: () {},
-                          //   icon: const Icon(
-                          //     Icons.more_vert,
-                          //     size: 18,
-                          //   ),
-                          // ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2),
-                        child: Text(
-                          ('Page: ' + page.toString()),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 15,
-                            color: Colors.black54,
-                          ),
+                      Text(
+                        ('Page: ' + page.toString()),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 15,
+                          color: Colors.black54,
                         ),
                       ),
                       Padding(
