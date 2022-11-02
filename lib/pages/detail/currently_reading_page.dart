@@ -116,6 +116,12 @@ class _DetailCurrentlyReadingBookState
                               title: widget.title,
                             );
                             Navigator.pop(context);
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Book deleted successfully'),
+                              ),
+                            );
                           },
                           child: const Text("Yes"),
                         ),

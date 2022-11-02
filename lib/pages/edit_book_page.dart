@@ -227,6 +227,7 @@ class _EditPageState extends State<EditPage> {
                                   docID: widget.documentId,
                                 );
                                 Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Book edited successfully'),
