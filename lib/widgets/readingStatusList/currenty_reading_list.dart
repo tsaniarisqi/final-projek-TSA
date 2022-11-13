@@ -22,8 +22,10 @@ class CurretlyReadingList extends StatelessWidget {
               String title = documentSnapshot['title'];
               String author = documentSnapshot['author'];
               int totalPage = documentSnapshot['totalPage'];
+              int currentPage = documentSnapshot['currentPage'];
               String readingStatus = documentSnapshot['readingStatus'];
               String urlCoverBook = documentSnapshot['bookCover'];
+              String startReadingDate = documentSnapshot['startReadingDate'];
 
               return GestureDetector(
                 onTap: () {
@@ -35,8 +37,10 @@ class CurretlyReadingList extends StatelessWidget {
                         title: title,
                         author: author,
                         totalPage: totalPage,
+                        currentPage: currentPage,
                         readingStatus: readingStatus,
                         urlCoverBook: urlCoverBook,
+                        startReadingDate: startReadingDate,
                       ),
                     ),
                   );

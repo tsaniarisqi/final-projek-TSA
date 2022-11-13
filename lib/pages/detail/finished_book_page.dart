@@ -1,4 +1,5 @@
 import 'package:final_projek/pages/add_note_page.dart';
+import 'package:final_projek/pages/edit/edit_finished_page.dart';
 import 'package:final_projek/pages/edit_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:final_projek/widgets/note_list.dart';
@@ -11,6 +12,9 @@ class DetailFinishedBook extends StatefulWidget {
   final int totalPage;
   final String readingStatus;
   final String urlCoverBook;
+  final String startReadingDate;
+  final String finishReadingDate;
+  final String year;
 
   const DetailFinishedBook({
     Key? key,
@@ -20,6 +24,9 @@ class DetailFinishedBook extends StatefulWidget {
     required this.totalPage,
     required this.readingStatus,
     required this.urlCoverBook,
+    required this.startReadingDate,
+    required this.finishReadingDate,
+    required this.year,
   }) : super(key: key);
 
   @override
@@ -34,20 +41,26 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          title: const Text(
-            'Detail',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
-            ),
-          ),
           actions: [
             PopupMenuButton<int>(
               itemBuilder: (context) => [
                 // PopupMenuItem 1
                 PopupMenuItem(
                   value: 1,
+                  // row with 2 children
+                  child: Row(
+                    children: const [
+                      Icon(Icons.info),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text("Book Details")
+                    ],
+                  ),
+                ),
+                // PopupMenuItem 2
+                PopupMenuItem(
+                  value: 2,
                   // row with 2 children
                   child: Row(
                     children: const [
@@ -61,7 +74,7 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
                 ),
                 // PopupMenuItem 2
                 PopupMenuItem(
-                  value: 2,
+                  value: 3,
                   // row with two children
                   child: Row(
                     children: const [
@@ -80,52 +93,28 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
               onSelected: (value) {
                 // if value 1 show dialog
                 if (value == 1) {
+                  _details(context);
+                  // if value 2 show dialog
+                } else if (value == 2) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditPage(
+                      builder: (context) => EditFinishedPage(
                         documentId: widget.documentId,
                         currentTitle: widget.title,
                         currentAuthor: widget.author,
                         currentTotalPage: widget.totalPage,
                         currentReadingStatus: widget.readingStatus,
+                        currentStartReadingDate: widget.startReadingDate,
+                        currentFinishReadingDate: widget.finishReadingDate,
+                        year: widget.year,
                       ),
                     ),
                   );
-                  // if value 2 show dialog
-                } else if (value == 2) {
+                  // if value 3 show dialog
+                } else if (value == 3) {
                   // delete book
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Delete"),
-                      content: const Text("Are you sure to delete this book? "),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            await Book.deleteBook(
-                              docId: widget.documentId,
-                              title: widget.title,
-                            );
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Book deleted successfully'),
-                              ),
-                            );
-                          },
-                          child: const Text("Yes"),
-                        ),
-                      ],
-                    ),
-                  );
+                  _delete(context);
                 }
               },
             ),
@@ -246,6 +235,131 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  _delete(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete"),
+        content: const Text("Are you sure to delete this book? "),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              await Book.deleteBook(
+                docId: widget.documentId,
+                title: widget.title,
+              );
+              Navigator.pop(context);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Book deleted successfully'),
+                ),
+              );
+            },
+            child: const Text("Yes"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<dynamic> _details(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Book Details',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+              child: Text(
+                'Title : ' + widget.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+              child: Text(
+                'Author : ' + widget.author,
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+              child: Text(
+                'Total Page : ' + widget.totalPage.toString(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            const Divider(thickness: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Text(
+                'Reading Status : ' + widget.readingStatus,
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+              child: Text(
+                'Start Reading : ' + widget.startReadingDate,
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            Text(
+              'Finish Reading : ' + widget.finishReadingDate,
+              style: const TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Ok'),
+          )
+        ],
       ),
     );
   }

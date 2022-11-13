@@ -18,6 +18,10 @@ class Book {
     String? readingStatus,
     String? urlBookCover,
     File? bookCover,
+    String? startReadingDate,
+    String? finishReadingDate,
+    String? year,
+    int? currentPage,
   }) async {
     DocumentReference documentReferencer =
         _mainCollection.doc(user?.uid).collection('books').doc();
@@ -31,7 +35,11 @@ class Book {
       "author": author,
       "totalPage": totalPage,
       "readingStatus": readingStatus,
-      "bookCover": urlBookCover
+      "bookCover": urlBookCover,
+      "startReadingDate": startReadingDate,
+      "finishReadingDate": finishReadingDate,
+      "year": year,
+      "currentPage": currentPage
     };
     await documentReferencer
         .set(data)
@@ -107,6 +115,9 @@ class Book {
     int? totalPage,
     String? readingStatus,
     String? docID,
+    String? startReadingDate,
+    String? finishReadingDate,
+    String? year,
   }) async {
     DocumentReference documentReferencer =
         _mainCollection.doc(user?.uid).collection('books').doc(docID);
@@ -115,7 +126,28 @@ class Book {
       "title": title,
       "author": author,
       "totalPage": totalPage,
-      "readingStatus": readingStatus
+      "readingStatus": readingStatus,
+      "startReadingDate": startReadingDate,
+      "finishReadingDate": finishReadingDate,
+      "year": year,
+    };
+
+    await documentReferencer
+        .update(data)
+        // .set(data, SetOptions(merge: true))
+        .whenComplete(() => print("Book updated in the database"))
+        .catchError((e) => print(e));
+  }
+
+  static Future<void> updateCurrentPage({
+    int? currentPage,
+    String? docID,
+  }) async {
+    DocumentReference documentReferencer =
+        _mainCollection.doc(user?.uid).collection('books').doc(docID);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "currentPage": currentPage,
     };
 
     await documentReferencer
@@ -128,13 +160,61 @@ class Book {
   // Button Start Reading
   static Future<void> startReading({
     String? readingStatus,
+    String? startReadingDate,
+    int? currentPage,
     String? docID,
   }) async {
     DocumentReference documentReferencer =
         _mainCollection.doc(user?.uid).collection('books').doc(docID);
 
     Map<String, dynamic> data = <String, dynamic>{
-      "readingStatus": readingStatus
+      "readingStatus": readingStatus,
+      "startReadingDate": startReadingDate,
+      "currentPage": currentPage,
+    };
+
+    await documentReferencer
+        .update(data)
+        // .set(data, SetOptions(merge: true))
+        .whenComplete(() => print("Book updated in the database"))
+        .catchError((e) => print(e));
+  }
+
+  // Button finish Reading
+  static Future<void> finishReading({
+    String? readingStatus,
+    String? finishReadingDate,
+    String? year,
+    int? currentPage,
+    String? docID,
+  }) async {
+    DocumentReference documentReferencer =
+        _mainCollection.doc(user?.uid).collection('books').doc(docID);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "readingStatus": readingStatus,
+      "finishReadingDate": finishReadingDate,
+      "year": year,
+      "currentPage": currentPage,
+    };
+
+    await documentReferencer
+        .update(data)
+        // .set(data, SetOptions(merge: true))
+        .whenComplete(() => print("Book updated in the database"))
+        .catchError((e) => print(e));
+  }
+
+  // Button Give Up Reading
+  static Future<void> giveupReading({
+    String? readingStatus,
+    String? docID,
+  }) async {
+    DocumentReference documentReferencer =
+        _mainCollection.doc(user?.uid).collection('books').doc(docID);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "readingStatus": readingStatus,
     };
 
     await documentReferencer

@@ -1,41 +1,54 @@
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class EditPage extends StatefulWidget {
+class EditCurrentlyReading extends StatefulWidget {
   final documentId;
   final String currentTitle;
   final String currentAuthor;
   final int currentTotalPage;
-  // final String currentReadingStatus;
+  final String currentReadingStatus;
+  final String currentStartReadingDate;
 
-  const EditPage({
+  const EditCurrentlyReading({
     Key? key,
     this.documentId,
     required this.currentTitle,
     required this.currentAuthor,
     required this.currentTotalPage,
-    // required this.currentReadingStatus,
+    required this.currentReadingStatus,
+    required this.currentStartReadingDate,
   }) : super(key: key);
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  State<EditCurrentlyReading> createState() => _EditCurrentlyReadingState();
 }
 
-class _EditPageState extends State<EditPage> {
-  final _editBookFormKey = GlobalKey<FormState>();
+class _EditCurrentlyReadingState extends State<EditCurrentlyReading> {
+  final _formKey = GlobalKey<FormState>();
 
   late var titleController = TextEditingController();
   late var authorController = TextEditingController();
   late var totalPageController = TextEditingController();
-  late var readingStatusController = TextEditingController();
+  late var startReadingDateController = TextEditingController();
 
-  List<String> readingStatusList = [
-    'Currently Reading',
-    'To Read Later',
-    'Finished',
-    'Give Up'
-  ];
-  String? selectedVal = '';
+  DateTime? _dateTime;
+
+  void _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate:
+          DateFormat('dd MMM yyyy').parse(widget.currentStartReadingDate),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2050),
+    ).then((value) {
+      setState(() {
+        _dateTime = value!;
+        startReadingDateController.text =
+            DateFormat('dd MMM yyyy').format(_dateTime!);
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -43,7 +56,8 @@ class _EditPageState extends State<EditPage> {
     authorController = TextEditingController(text: widget.currentAuthor);
     totalPageController =
         TextEditingController(text: widget.currentTotalPage.toString());
-    // selectedVal = widget.currentReadingStatus;
+    startReadingDateController =
+        TextEditingController(text: widget.currentStartReadingDate);
     super.initState();
   }
 
@@ -52,7 +66,7 @@ class _EditPageState extends State<EditPage> {
     return SafeArea(
       child: Scaffold(
         body: Form(
-          key: _editBookFormKey,
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
@@ -152,35 +166,39 @@ class _EditPageState extends State<EditPage> {
                     height: 16,
                   ),
 
-                  // // reading status dropdown
-                  // DropdownButtonFormField(
-                  //   value: selectedVal,
-                  //   items: readingStatusList
-                  //       .map(
-                  //         (e) => DropdownMenuItem(child: Text(e), value: e),
-                  //       )
-                  //       .toList(),
-                  //   onChanged: (val) {
-                  //     setState(() {
-                  //       selectedVal = val as String?;
-                  //     });
-                  //   },
-                  //   decoration: InputDecoration(
-                  //     labelText: 'Reading Status',
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10.0),
-                  //     ),
-                  //   ),
-                  //   validator: (value) {
-                  //     if (value == null) {
-                  //       return 'Please choose this reading status';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-                  // const SizedBox(
-                  //   height: 16,
-                  // ),
+                  // start reading date
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    autofocus: true,
+                    controller: startReadingDateController,
+                    decoration: InputDecoration(
+                      labelText: 'Start Reading Date',
+                      suffixIcon: const Icon(Icons.calendar_today_rounded),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusColor: const Color(0xffC5930B),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                    onTap: () {
+                      // Below line stops keyboard from appearing
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _showDatePicker();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
 
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -217,25 +235,24 @@ class _EditPageState extends State<EditPage> {
                                   letterSpacing: 3),
                             ),
                             onPressed: () async {
-                              setState(() {
-                                if (_editBookFormKey.currentState!.validate()) {
-                                  Book.updateBook(
-                                    title: titleController.text,
-                                    author: authorController.text,
-                                    totalPage:
-                                        int.tryParse(totalPageController.text),
-                                    // readingStatus: selectedVal,
-                                    docID: widget.documentId,
-                                  );
-                                  Navigator.of(context).pop();
-                                  // Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Book edited successfully'),
-                                    ),
-                                  );
-                                }
-                              });
+                              if (_formKey.currentState!.validate()) {
+                                await Book.updateBook(
+                                  title: titleController.text,
+                                  author: authorController.text,
+                                  totalPage:
+                                      int.tryParse(totalPageController.text),
+                                  readingStatus: widget.currentReadingStatus,
+                                  docID: widget.documentId,
+                                  startReadingDate:
+                                      startReadingDateController.text,
+                                );
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Note edited successfully'),
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),

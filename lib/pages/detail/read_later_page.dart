@@ -1,8 +1,10 @@
 import 'package:final_projek/pages/add_note_page.dart';
+import 'package:final_projek/pages/edit/edit_read_later_page.dart';
 import 'package:final_projek/pages/edit_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:final_projek/widgets/note_list.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DetailReadLaterBook extends StatefulWidget {
   final documentId;
@@ -34,14 +36,6 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          title: const Text(
-            'Detail',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
-            ),
-          ),
           actions: [
             PopupMenuButton<int>(
               itemBuilder: (context) => [
@@ -83,7 +77,7 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditPage(
+                      builder: (context) => EditReadLater(
                         documentId: widget.documentId,
                         currentTitle: widget.title,
                         currentAuthor: widget.author,
@@ -229,7 +223,8 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                     style: TextStyle(fontSize: 15, color: Colors.black45),
                   ),
                 ),
-                // button
+
+                // button start
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   width: double.infinity,
@@ -245,8 +240,12 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                       ),
                     ),
                     onPressed: () async {
+                      var now = DateTime.now();
+                      var formatedDate = DateFormat('dd MMM yyyy').format(now);
                       await Book.startReading(
                         readingStatus: 'Currently Reading',
+                        startReadingDate: formatedDate,
+                        currentPage: 0,
                         docID: widget.documentId,
                       );
                       Navigator.of(context).pop();

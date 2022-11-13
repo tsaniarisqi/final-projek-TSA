@@ -1,41 +1,32 @@
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
 
-class EditPage extends StatefulWidget {
+class EditReadLater extends StatefulWidget {
   final documentId;
   final String currentTitle;
   final String currentAuthor;
   final int currentTotalPage;
-  // final String currentReadingStatus;
+  final String currentReadingStatus;
 
-  const EditPage({
+  const EditReadLater({
     Key? key,
     this.documentId,
     required this.currentTitle,
     required this.currentAuthor,
     required this.currentTotalPage,
-    // required this.currentReadingStatus,
+    required this.currentReadingStatus,
   }) : super(key: key);
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  State<EditReadLater> createState() => _EditReadLaterState();
 }
 
-class _EditPageState extends State<EditPage> {
-  final _editBookFormKey = GlobalKey<FormState>();
+class _EditReadLaterState extends State<EditReadLater> {
+  final _formKey = GlobalKey<FormState>();
 
   late var titleController = TextEditingController();
   late var authorController = TextEditingController();
   late var totalPageController = TextEditingController();
-  late var readingStatusController = TextEditingController();
-
-  List<String> readingStatusList = [
-    'Currently Reading',
-    'To Read Later',
-    'Finished',
-    'Give Up'
-  ];
-  String? selectedVal = '';
 
   @override
   void initState() {
@@ -43,7 +34,6 @@ class _EditPageState extends State<EditPage> {
     authorController = TextEditingController(text: widget.currentAuthor);
     totalPageController =
         TextEditingController(text: widget.currentTotalPage.toString());
-    // selectedVal = widget.currentReadingStatus;
     super.initState();
   }
 
@@ -52,7 +42,7 @@ class _EditPageState extends State<EditPage> {
     return SafeArea(
       child: Scaffold(
         body: Form(
-          key: _editBookFormKey,
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
@@ -129,6 +119,7 @@ class _EditPageState extends State<EditPage> {
                     height: 8,
                   ),
                   TextFormField(
+                    keyboardType: TextInputType.number,
                     autofocus: true,
                     controller: totalPageController,
                     decoration: InputDecoration(
@@ -151,36 +142,6 @@ class _EditPageState extends State<EditPage> {
                   const SizedBox(
                     height: 16,
                   ),
-
-                  // // reading status dropdown
-                  // DropdownButtonFormField(
-                  //   value: selectedVal,
-                  //   items: readingStatusList
-                  //       .map(
-                  //         (e) => DropdownMenuItem(child: Text(e), value: e),
-                  //       )
-                  //       .toList(),
-                  //   onChanged: (val) {
-                  //     setState(() {
-                  //       selectedVal = val as String?;
-                  //     });
-                  //   },
-                  //   decoration: InputDecoration(
-                  //     labelText: 'Reading Status',
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10.0),
-                  //     ),
-                  //   ),
-                  //   validator: (value) {
-                  //     if (value == null) {
-                  //       return 'Please choose this reading status';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-                  // const SizedBox(
-                  //   height: 16,
-                  // ),
 
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -218,13 +179,13 @@ class _EditPageState extends State<EditPage> {
                             ),
                             onPressed: () async {
                               setState(() {
-                                if (_editBookFormKey.currentState!.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   Book.updateBook(
                                     title: titleController.text,
                                     author: authorController.text,
                                     totalPage:
                                         int.tryParse(totalPageController.text),
-                                    // readingStatus: selectedVal,
+                                    readingStatus: widget.currentReadingStatus,
                                     docID: widget.documentId,
                                   );
                                   Navigator.of(context).pop();

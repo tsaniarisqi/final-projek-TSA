@@ -4,6 +4,7 @@ import 'package:final_projek/pages/main_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
@@ -26,6 +27,24 @@ class _AddPageState extends State<AddPage> {
   ];
   String? selectedVal = '';
   File? _pickedImage;
+
+  final dateController = TextEditingController();
+
+  DateTime? _dateTime;
+
+  void _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2050),
+    ).then((value) {
+      setState(() {
+        _dateTime = value!;
+        dateController.text = DateFormat('dd MMM yyyy').format(_dateTime!);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +234,10 @@ class _AddPageState extends State<AddPage> {
                             totalPage: int.tryParse(totalPageController.text),
                             readingStatus: selectedVal,
                             bookCover: _pickedImage,
+                            startReadingDate: "",
+                            finishReadingDate: "",
+                            year: "",
+                            currentPage: 0,
                           );
                           Navigator.push(
                             context,

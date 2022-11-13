@@ -1,41 +1,106 @@
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class EditPage extends StatefulWidget {
+class EditFinishedPage extends StatefulWidget {
   final documentId;
   final String currentTitle;
   final String currentAuthor;
   final int currentTotalPage;
-  // final String currentReadingStatus;
+  final String currentReadingStatus;
+  final String currentStartReadingDate;
+  final String currentFinishReadingDate;
+  final String year;
 
-  const EditPage({
+  const EditFinishedPage({
     Key? key,
     this.documentId,
     required this.currentTitle,
     required this.currentAuthor,
     required this.currentTotalPage,
-    // required this.currentReadingStatus,
+    required this.currentReadingStatus,
+    required this.currentStartReadingDate,
+    required this.currentFinishReadingDate,
+    required this.year,
   }) : super(key: key);
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  State<EditFinishedPage> createState() => _EditFinishedPageState();
 }
 
-class _EditPageState extends State<EditPage> {
-  final _editBookFormKey = GlobalKey<FormState>();
+class _EditFinishedPageState extends State<EditFinishedPage> {
+  final _formKey = GlobalKey<FormState>();
 
   late var titleController = TextEditingController();
   late var authorController = TextEditingController();
   late var totalPageController = TextEditingController();
-  late var readingStatusController = TextEditingController();
+  late var startReadingDateController = TextEditingController();
+  late var finishReadingDateController = TextEditingController();
 
-  List<String> readingStatusList = [
-    'Currently Reading',
-    'To Read Later',
-    'Finished',
-    'Give Up'
-  ];
-  String? selectedVal = '';
+  DateTime? _dateTimeStart;
+  DateTime? _dateTimeFinish;
+
+  void _showDatePicker1() {
+    if (widget.currentStartReadingDate == "") {
+      showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050),
+      ).then((value) {
+        setState(() {
+          _dateTimeStart = value!;
+          startReadingDateController.text =
+              DateFormat('dd MMM yyyy').format(_dateTimeStart!);
+        });
+      });
+    } else {
+      showDatePicker(
+        context: context,
+        initialDate:
+            DateFormat('dd MMM yyyy').parse(widget.currentStartReadingDate),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050),
+      ).then((value) {
+        setState(() {
+          _dateTimeStart = value!;
+          startReadingDateController.text =
+              DateFormat('dd MMM yyyy').format(_dateTimeStart!);
+        });
+      });
+    }
+  }
+
+  void _showDatePicker2() {
+    if (widget.currentFinishReadingDate == "") {
+      showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050),
+      ).then((value) {
+        setState(() {
+          _dateTimeFinish = value!;
+          finishReadingDateController.text =
+              DateFormat('dd MMM yyyy').format(_dateTimeFinish!);
+        });
+      });
+    } else {
+      showDatePicker(
+        context: context,
+        initialDate:
+            DateFormat('dd MMM yyyy').parse(widget.currentFinishReadingDate),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050),
+      ).then((value) {
+        setState(() {
+          _dateTimeFinish = value!;
+          finishReadingDateController.text =
+              DateFormat('dd MMM yyyy').format(_dateTimeFinish!);
+        });
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -43,7 +108,10 @@ class _EditPageState extends State<EditPage> {
     authorController = TextEditingController(text: widget.currentAuthor);
     totalPageController =
         TextEditingController(text: widget.currentTotalPage.toString());
-    // selectedVal = widget.currentReadingStatus;
+    startReadingDateController =
+        TextEditingController(text: widget.currentStartReadingDate);
+    finishReadingDateController =
+        TextEditingController(text: widget.currentFinishReadingDate);
     super.initState();
   }
 
@@ -52,7 +120,7 @@ class _EditPageState extends State<EditPage> {
     return SafeArea(
       child: Scaffold(
         body: Form(
-          key: _editBookFormKey,
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
@@ -152,35 +220,73 @@ class _EditPageState extends State<EditPage> {
                     height: 16,
                   ),
 
-                  // // reading status dropdown
-                  // DropdownButtonFormField(
-                  //   value: selectedVal,
-                  //   items: readingStatusList
-                  //       .map(
-                  //         (e) => DropdownMenuItem(child: Text(e), value: e),
-                  //       )
-                  //       .toList(),
-                  //   onChanged: (val) {
-                  //     setState(() {
-                  //       selectedVal = val as String?;
-                  //     });
-                  //   },
-                  //   decoration: InputDecoration(
-                  //     labelText: 'Reading Status',
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10.0),
-                  //     ),
-                  //   ),
-                  //   validator: (value) {
-                  //     if (value == null) {
-                  //       return 'Please choose this reading status';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-                  // const SizedBox(
-                  //   height: 16,
-                  // ),
+                  // start reading date
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    autofocus: true,
+                    controller: startReadingDateController,
+                    decoration: InputDecoration(
+                      labelText: 'Start Reading Date',
+                      suffixIcon: const Icon(Icons.calendar_today_rounded),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusColor: const Color(0xffC5930B),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                    onTap: () {
+                      // Below line stops keyboard from appearing
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _showDatePicker1();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // finished reading date
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    autofocus: true,
+                    controller: finishReadingDateController,
+                    decoration: InputDecoration(
+                      labelText: 'Finish Reading Date',
+                      suffixIcon: const Icon(Icons.calendar_today_rounded),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      focusColor: const Color(0xffC5930B),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                    onTap: () {
+                      // Below line stops keyboard from appearing
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _showDatePicker2();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
 
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -218,14 +324,20 @@ class _EditPageState extends State<EditPage> {
                             ),
                             onPressed: () async {
                               setState(() {
-                                if (_editBookFormKey.currentState!.validate()) {
+                                if (_formKey.currentState!.validate()) {
                                   Book.updateBook(
                                     title: titleController.text,
                                     author: authorController.text,
                                     totalPage:
                                         int.tryParse(totalPageController.text),
-                                    // readingStatus: selectedVal,
+                                    readingStatus: widget.currentReadingStatus,
                                     docID: widget.documentId,
+                                    startReadingDate:
+                                        startReadingDateController.text,
+                                    finishReadingDate:
+                                        finishReadingDateController.text,
+                                    year: DateFormat('yyyy')
+                                        .format(_dateTimeFinish!),
                                   );
                                   Navigator.of(context).pop();
                                   // Navigator.of(context).pop();

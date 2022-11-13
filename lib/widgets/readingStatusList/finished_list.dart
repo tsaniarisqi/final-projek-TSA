@@ -24,6 +24,9 @@ class FinishedList extends StatelessWidget {
               int totalPage = documentSnapshot['totalPage'];
               String readingStatus = documentSnapshot['readingStatus'];
               String urlCoverBook = documentSnapshot['bookCover'];
+              String startReadingDate = documentSnapshot['startReadingDate'];
+              String finishReadingDate = documentSnapshot['finishReadingDate'];
+              String year = documentSnapshot['year'];
 
               return GestureDetector(
                 onTap: () {
@@ -37,6 +40,9 @@ class FinishedList extends StatelessWidget {
                         totalPage: totalPage,
                         readingStatus: readingStatus,
                         urlCoverBook: urlCoverBook,
+                        startReadingDate: startReadingDate,
+                        finishReadingDate: finishReadingDate,
+                        year: year,
                       ),
                     ),
                   );
