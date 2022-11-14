@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:final_projek/services/database/goal.dart';
+import 'package:final_projek/widgets/edit_goal.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -23,11 +24,11 @@ class ProgressBar extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final documentSnapshot = snapshot.data!.docs[index];
-              // final String docId = snapshot.data!.docs[index].id;
+              final String docId = snapshot.data!.docs[index].id;
               int goal = documentSnapshot['goal'];
 
               return StreamBuilder<QuerySnapshot>(
-                stream: Book.readFinishedBook(),
+                stream: Book.finishedBook(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
@@ -79,13 +80,21 @@ class ProgressBar extends StatelessWidget {
                                       const SizedBox(
                                         height: 16,
                                       ),
-                                      AutoSizeText(
-                                        total.toString() +
-                                            ' of ' +
-                                            goal.toString() +
-                                            ' is Completed',
-                                        maxLines: 1,
-                                        style: TextStyle(fontSize: 14),
+                                      Row(
+                                        children: [
+                                          AutoSizeText(
+                                            total.toString() +
+                                                ' of ' +
+                                                goal.toString() +
+                                                ' is Completed',
+                                            maxLines: 1,
+                                            style: const TextStyle(fontSize: 14),
+                                          ),
+                                          EditGoal(
+                                            documentId: docId,
+                                            goal: goal,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),

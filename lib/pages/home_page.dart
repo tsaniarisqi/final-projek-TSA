@@ -3,7 +3,6 @@ import 'package:final_projek/widgets/readingStatusCard/currently_reading_card.da
 import 'package:final_projek/widgets/readingStatusCard/finished_card.dart';
 import 'package:final_projek/widgets/readingStatusCard/give_up_card.dart';
 import 'package:final_projek/widgets/readingStatusCard/read_later_card.dart';
-import 'package:final_projek/widgets/reading_status.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        'Hi, Keysha',
+                        'Hi, ',
                         style: TextStyle(
                             color: Colors.black87,
                             fontSize: 24,
@@ -40,7 +39,7 @@ class _HomePageState extends State<HomePage> {
                         height: 8.0,
                       ),
                       Text(
-                        'What book did you\n read today?',
+                        'What book did you\nread today?',
                         style: TextStyle(color: Colors.black87, fontSize: 14),
                       ),
                     ],

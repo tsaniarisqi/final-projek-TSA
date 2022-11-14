@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:intl/intl.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _mainCollection =
     _firestore.collection('readingList');
 final user = FirebaseAuth.instance.currentUser;
+var now = DateTime.now();
+var yearFormate = DateFormat('yyyy').format(now);
 
 class Book {
   // tambah data buku
@@ -77,6 +80,16 @@ class Book {
     return bookCollection
         .where('readingStatus', isEqualTo: 'Finished')
         .orderBy('title')
+        .snapshots();
+  }
+
+  static Stream<QuerySnapshot> finishedBook() {
+    CollectionReference bookCollection =
+        _mainCollection.doc(user?.uid).collection('books');
+
+    return bookCollection
+        .where('readingStatus', isEqualTo: 'Finished')
+        .where('year', isEqualTo: yearFormate)
         .snapshots();
   }
 

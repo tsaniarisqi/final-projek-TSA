@@ -1,6 +1,8 @@
 import 'package:final_projek/pages/login_page.dart';
+import 'package:final_projek/services/database/goal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -26,6 +28,13 @@ class _RegisterPage extends State<RegisterPage> {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
+    );
+    var now = DateTime.now();
+    var formatedDate = DateFormat('dd MMM yyyy').format(now);
+    var yearFormate = DateFormat('yyyy').format(now);
+    await Goal.addProgress(
+      year: yearFormate,
+      goal: 5,
     );
   }
 
