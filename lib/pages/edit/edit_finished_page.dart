@@ -36,9 +36,11 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
   late var totalPageController = TextEditingController();
   late var startReadingDateController = TextEditingController();
   late var finishReadingDateController = TextEditingController();
+  late var yearController = TextEditingController();
 
   DateTime? _dateTimeStart;
   DateTime? _dateTimeFinish;
+  DateTime? _yearFinish;
 
   void _showDatePicker1() {
     if (widget.currentStartReadingDate == "") {
@@ -80,9 +82,11 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
         lastDate: DateTime(2050),
       ).then((value) {
         setState(() {
-          _dateTimeFinish = value!;
+          _dateTimeFinish = value;
+          _yearFinish = value;
           finishReadingDateController.text =
               DateFormat('dd MMM yyyy').format(_dateTimeFinish!);
+          yearController.text = DateFormat('yyyy').format(_yearFinish!);
         });
       });
     } else {
@@ -95,8 +99,10 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
       ).then((value) {
         setState(() {
           _dateTimeFinish = value!;
+          _yearFinish = value;
           finishReadingDateController.text =
               DateFormat('dd MMM yyyy').format(_dateTimeFinish!);
+          yearController.text = DateFormat('yyyy').format(_yearFinish!);
         });
       });
     }
@@ -336,8 +342,7 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
                                         startReadingDateController.text,
                                     finishReadingDate:
                                         finishReadingDateController.text,
-                                    year: DateFormat('yyyy')
-                                        .format(_dateTimeFinish!),
+                                    year: yearController.text,
                                   );
                                   Navigator.of(context).pop();
                                   // Navigator.of(context).pop();
