@@ -121,7 +121,7 @@ class _DetailCurrentlyReadingBookState
               color: Colors.white,
               elevation: 2,
               // on selected we show the dialog box
-              onSelected: (value) {
+              onSelected: (value) async {
                 // if value 1 show dialog
                 if (value == 1) {
                   // detail book
@@ -147,10 +147,11 @@ class _DetailCurrentlyReadingBookState
                   // delete book
                   _delete(context);
                 } else if (value == 4) {
-                  Book.giveupReading(
+                  await Book.giveupReading(
                     readingStatus: 'Give Up',
                     docID: widget.documentId,
                   );
+                  Navigator.of(context).pop();
                 }
               },
             ),
