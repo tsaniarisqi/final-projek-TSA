@@ -173,6 +173,7 @@ class _AddNoteState extends State<AddNote> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        primary: const Color(0xffC5930B),
                       ),
                     ),
                   ),

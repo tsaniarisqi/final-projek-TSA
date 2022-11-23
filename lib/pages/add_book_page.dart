@@ -254,11 +254,16 @@ class _AddPageState extends State<AddPage> {
                       },
                       child: const Text(
                         'Submit',
+                        style: TextStyle(
+                          fontSize: 18,
+                          letterSpacing: 3,
+                        ),
                       ),
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        primary: const Color(0xffC5930B),
                       ),
                     ),
                   ),

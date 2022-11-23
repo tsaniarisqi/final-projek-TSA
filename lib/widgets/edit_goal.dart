@@ -36,7 +36,7 @@ class _EditGoalState extends State<EditGoal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Expanded(
       child: IconButton(
         padding: EdgeInsets.zero,
         constraints: BoxConstraints(),

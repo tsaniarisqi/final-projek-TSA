@@ -1,6 +1,5 @@
 import 'package:final_projek/pages/add_note_page.dart';
 import 'package:final_projek/pages/edit/edit_currently_reading_page.dart';
-import 'package:final_projek/pages/edit_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:final_projek/widgets/note_list.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +159,7 @@ class _DetailCurrentlyReadingBookState
         // button add note
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.white,
+          backgroundColor: const Color(0xffC5930B),
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).push(
@@ -353,6 +353,7 @@ class _DetailCurrentlyReadingBookState
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
+                      primary: const Color(0xffC5930B),
                     ),
                   ),
                 ),

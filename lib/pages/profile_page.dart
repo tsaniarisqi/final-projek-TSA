@@ -81,7 +81,6 @@ class _ProfilePageState extends State<ProfilePage> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Container(
-                color: const Color(0xffC5930B),
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
@@ -91,14 +90,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: EdgeInsets.all(16.0),
                     child: Text(
                       'Log Out',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 18,
+                        letterSpacing: 3,
+                      ),
                     ),
                   ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      const Color(0xffC5930B),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    primary: const Color(0xffC5930B),
                   ),
                 ),
               ),

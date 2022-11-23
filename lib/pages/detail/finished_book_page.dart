@@ -123,6 +123,7 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
         // button add note
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.white,
+          backgroundColor: const Color(0xffC5930B),
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).push(

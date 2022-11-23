@@ -195,13 +195,19 @@ class _EditPageState extends State<EditPage> {
                             child: const Text(
                               'Cancel',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  letterSpacing: 3),
+                                fontSize: 18,
+                                letterSpacing: 3,
+                              ),
                             ),
                             onPressed: () {
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              primary: const Color(0xffC5930B),
+                            ),
                           ),
                         ),
                         // tombol simpan
@@ -212,9 +218,9 @@ class _EditPageState extends State<EditPage> {
                             child: const Text(
                               'Update',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  letterSpacing: 3),
+                                fontSize: 18,
+                                letterSpacing: 3,
+                              ),
                             ),
                             onPressed: () async {
                               setState(() {
@@ -237,6 +243,12 @@ class _EditPageState extends State<EditPage> {
                                 }
                               });
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              primary: const Color(0xffC5930B),
+                            ),
                           ),
                         ),
                       ],

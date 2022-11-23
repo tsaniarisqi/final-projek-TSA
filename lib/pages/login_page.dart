@@ -46,15 +46,13 @@ class _LoginPage extends State<LoginPage> {
                     loginHeaderWidget(),
                     loginForm(),
                     loginButton(),
-                    showTextWidget(),
-                    signInButton(),
                   ]),
                 ),
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Container(
                     alignment: Alignment.bottomCenter,
-                    margin: const EdgeInsets.only(bottom: 80),
+                    margin: const EdgeInsets.only(bottom: 180),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -187,141 +185,7 @@ class _LoginPage extends State<LoginPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-        ),
-      ),
-
-      // child: RaisedButton(
-      //   onPressed: () async {
-      //     // SignInSignUpResult result = await AuthService.signInWithEmail(
-      //     //     email: emailController.text, pass: passwordController.text);
-      //     // if (result.user != null) {
-      //     //   Categories.userUid = _auth.currentUser.uid;
-      //     //   Product.userUid = _auth.currentUser.uid;
-      //     //   // Go to Profile Page
-      //     //   Navigator.push(
-      //     //     context,
-      //     //     MaterialPageRoute(
-      //     //       builder: (context) => ProductPage(),
-      //     //     ),
-      //     //   );
-      //     // } else {
-      //     //   // Show Dialog
-      //     //   showDialog(
-      //     //     context: context,
-      //     //     builder: (context) => AlertDialog(
-      //     //       title: Text("Error"),
-      //     //       content: Text(result.message),
-      //     //       actions: <Widget>[
-      //     //         FlatButton(
-      //     //           onPressed: () {
-      //     //             Navigator.pop(context);
-      //     //           },
-      //     //           child: Text("OK"),
-      //     //         )
-      //     //       ],
-      //     //     ),
-      //     //   );
-      //     // }
-      //   },
-      //   child: const Text(
-      //     "Login",
-      //     style: TextStyle(fontSize: 15, color: Colors.white),
-      //   ),
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(8),
-      //   ),
-      //   color: Colors.teal[300],
-      //   elevation: 0,
-      //   padding: const EdgeInsets.symmetric(vertical: 16),
-      // ),
-    );
-  }
-
-  // menampilkan text OR
-  Widget showTextWidget() {
-    return Row(
-      children: const <Widget>[
-        Expanded(
-          child: Divider(
-            thickness: 1,
-          ),
-        ),
-        SizedBox(width: 20),
-        Text(
-          "OR",
-        ),
-        SizedBox(width: 20),
-        Expanded(
-          child: Divider(
-            thickness: 1,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Button untuk signIn dengan account google
-  Widget signInButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: OutlinedButton(
-        onPressed: () async {
-          // SignInSignUpResult result = await AuthService.signInWithGoogle();
-          // if (result.user != null) {
-          //   Categories.userUid = _auth.currentUser.uid;
-          //   Product.userUid = _auth.currentUser.uid;
-          //   // Go to Profile Page
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => ProductPage(),
-          //     ),
-          //   );
-          // } else {
-          //   // Show Dialog
-          //   showDialog(
-          //     context: context,
-          //     builder: (context) => AlertDialog(
-          //       title: Text("Error"),
-          //       content: Text(result.message),
-          //       actions: <Widget>[
-          //         FlatButton(
-          //           onPressed: () {
-          //             Navigator.pop(context);
-          //           },
-          //           child: Text("OK"),
-          //         )
-          //       ],
-          //     ),
-          //   );
-          // }
-        },
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              Image(
-                  image: NetworkImage(
-                      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png'),
-                  height: 20.0),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  'Sign in with Google',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey,
-                  ),
-                ),
-              )
-            ],
-          ),
+          primary: const Color(0xffC5930B),
         ),
       ),
     );

@@ -307,13 +307,19 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
                             child: const Text(
                               'Cancel',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  letterSpacing: 3),
+                                fontSize: 18,
+                                letterSpacing: 3,
+                              ),
                             ),
                             onPressed: () {
                               Navigator.pop(context);
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              primary: const Color(0xffC5930B),
+                            ),
                           ),
                         ),
                         // tombol simpan
@@ -324,9 +330,9 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
                             child: const Text(
                               'Update',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  letterSpacing: 3),
+                                fontSize: 18,
+                                letterSpacing: 3,
+                              ),
                             ),
                             onPressed: () async {
                               setState(() {
@@ -354,6 +360,12 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
                                 }
                               });
                             },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              primary: const Color(0xffC5930B),
+                            ),
                           ),
                         ),
                       ],

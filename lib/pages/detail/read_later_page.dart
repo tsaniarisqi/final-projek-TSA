@@ -128,6 +128,7 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
         // button add note
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.white,
+          backgroundColor: const Color(0xffC5930B),
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).push(
@@ -254,6 +255,7 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
+                      primary: const Color(0xffC5930B),
                     ),
                   ),
                 ),
