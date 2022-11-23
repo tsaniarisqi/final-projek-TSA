@@ -76,6 +76,7 @@ flutter:
     - img/cover.jpeg
     - img/book_finished.png
     - img/book_giveup.png
+    - img/user.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
