@@ -100,6 +100,7 @@ class NoteList extends StatelessWidget {
                                       currentNote: note,
                                       currentPage: page,
                                       currentDate: date,
+                                      currentUrlNote: urlNote,
                                     ),
                                   ),
                                 );

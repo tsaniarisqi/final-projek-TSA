@@ -215,10 +215,7 @@ class _AddNoteState extends State<AddNote> {
                     },
                     child: Center(
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 0.19,
-                        width: MediaQuery.of(context).size.width * 0.28,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Center(
@@ -232,6 +229,7 @@ class _AddNoteState extends State<AddNote> {
                                 )
                               : ClipRect(
                                   child: Image(
+                                    width: double.infinity,
                                     image: FileImage(_pickedImage!),
                                     fit: BoxFit.fitHeight,
                                   ),

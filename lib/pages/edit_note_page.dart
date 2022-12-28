@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:final_projek/services/database/book.dart';
 import 'package:final_projek/services/database/note.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
+import '../widgets/selected_photo_options_screen.dart';
 
 class EditNotePage extends StatefulWidget {
   final noteId;
@@ -9,6 +16,7 @@ class EditNotePage extends StatefulWidget {
   final String currentNote;
   final int currentPage;
   final String currentDate;
+  final String currentUrlNote;
 
   const EditNotePage({
     Key? key,
@@ -17,6 +25,7 @@ class EditNotePage extends StatefulWidget {
     required this.currentNote,
     required this.currentPage,
     required this.currentDate,
+    required this.currentUrlNote,
   }) : super(key: key);
 
   @override
@@ -46,6 +55,56 @@ class _EditNotePageState extends State<EditNotePage> {
     });
   }
 
+  File? _pickedImage;
+
+  Future _pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      File? img = File(image.path);
+      img = await _cropImage(imageFile: img);
+      setState(() {
+        _pickedImage = img;
+        Navigator.of(context).pop();
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<File?> _cropImage({required File imageFile}) async {
+    CroppedFile? croppedImage =
+        await ImageCropper().cropImage(sourcePath: imageFile.path);
+    if (croppedImage == null) return null;
+    return File(croppedImage.path);
+  }
+
+  void _showSelectPhotoOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectedPhotoOptionsScreen(
+                onTap: _pickImage,
+              ),
+            );
+          }),
+    );
+  }
+
   @override
   void initState() {
     noteController = TextEditingController(text: widget.currentNote);
@@ -66,7 +125,6 @@ class _EditNotePageState extends State<EditNotePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // note
                   const Text(
                     'Edit a Note',
                     style: TextStyle(
@@ -78,6 +136,8 @@ class _EditNotePageState extends State<EditNotePage> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // note
                   const SizedBox(
                     height: 8,
                   ),
@@ -93,6 +153,8 @@ class _EditNotePageState extends State<EditNotePage> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
+                    maxLines: 10,
+                    minLines: 5,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please fill this section';
@@ -141,7 +203,7 @@ class _EditNotePageState extends State<EditNotePage> {
                     controller: dateController,
                     decoration: InputDecoration(
                       labelText: 'Date',
-                      suffixIcon: Icon(Icons.calendar_today_rounded),
+                      suffixIcon: const Icon(Icons.calendar_today_rounded),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -165,6 +227,44 @@ class _EditNotePageState extends State<EditNotePage> {
                   const SizedBox(
                     height: 16,
                   ),
+
+                  // Note Image
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _showSelectPhotoOptions(context);
+                    },
+                    child: Center(
+                      child: Container(
+                        // height: MediaQuery.of(context).size.height * 0.19,
+                        // width: MediaQuery.of(context).size.width * 0.28,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: _pickedImage == null
+                              ? ClipRect(
+                                  child: Image(
+                                    image: NetworkImage(widget.currentUrlNote),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                )
+                              : ClipRect(
+                                  child: Image(
+                                    image: FileImage(_pickedImage!),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // const SizedBox(
+                  //   height: 3,
+                  // ),
 
                   Padding(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -207,13 +307,31 @@ class _EditNotePageState extends State<EditNotePage> {
                               ),
                             ),
                             onPressed: () async {
-                              if (_editNoteFormKey.currentState!.validate()) {
+                              if (_editNoteFormKey.currentState!.validate() &&
+                                  _pickedImage == null) {
                                 await Note.updateNote(
                                   note: noteController.text,
                                   page: int.tryParse(pageController.text),
                                   date: dateController.text,
                                   noteId: widget.noteId,
                                   bookId: widget.bookId,
+                                );
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Note edited successfully'),
+                                  ),
+                                );
+                              } else if (_editNoteFormKey.currentState!
+                                      .validate() &&
+                                  _pickedImage != null) {
+                                await Note.updateNoteImg(
+                                  note: noteController.text,
+                                  page: int.tryParse(pageController.text),
+                                  date: dateController.text,
+                                  noteId: widget.noteId,
+                                  bookId: widget.bookId,
+                                  noteImg: _pickedImage,
                                 );
                                 Navigator.of(context).pop();
                                 ScaffoldMessenger.of(context).showSnackBar(
