@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
+import '../../widgets/selected_photo_options_screen.dart';
 
 class EditFinishedPage extends StatefulWidget {
   final documentId;
@@ -8,6 +14,7 @@ class EditFinishedPage extends StatefulWidget {
   final String currentAuthor;
   final int currentTotalPage;
   final String currentReadingStatus;
+  final String currentUrlCoverBook;
   final String currentStartReadingDate;
   final String currentFinishReadingDate;
   final String year;
@@ -19,6 +26,7 @@ class EditFinishedPage extends StatefulWidget {
     required this.currentAuthor,
     required this.currentTotalPage,
     required this.currentReadingStatus,
+    required this.currentUrlCoverBook,
     required this.currentStartReadingDate,
     required this.currentFinishReadingDate,
     required this.year,
@@ -108,6 +116,48 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
     }
   }
 
+  File? _pickedImage;
+
+  Future _pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      File? img = File(image.path);
+      setState(() {
+        _pickedImage = img;
+        Navigator.of(context).pop();
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _showSelectPhotoOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectedPhotoOptionsScreen(
+                onTap: _pickImage,
+              ),
+            );
+          }),
+    );
+  }
+
   @override
   void initState() {
     titleController = TextEditingController(text: widget.currentTitle);
@@ -133,7 +183,6 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // title form
                   const Text(
                     'Edit a Book',
                     style: TextStyle(
@@ -145,6 +194,47 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // Book Cover
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _showSelectPhotoOptions(context);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.19,
+                        width: MediaQuery.of(context).size.width * 0.28,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: _pickedImage == null
+                              ? ClipRect(
+                                  child: Image(
+                                    image: NetworkImage(
+                                        widget.currentUrlCoverBook),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                )
+                              : ClipRect(
+                                  child: Image(
+                                    image: FileImage(_pickedImage!),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // title form
                   const SizedBox(
                     height: 8,
                   ),
@@ -335,30 +425,51 @@ class _EditFinishedPageState extends State<EditFinishedPage> {
                               ),
                             ),
                             onPressed: () async {
-                              setState(() {
-                                if (_formKey.currentState!.validate()) {
-                                  Book.updateBook(
-                                    title: titleController.text,
-                                    author: authorController.text,
-                                    totalPage:
-                                        int.tryParse(totalPageController.text),
-                                    readingStatus: widget.currentReadingStatus,
-                                    docID: widget.documentId,
-                                    startReadingDate:
-                                        startReadingDateController.text,
-                                    finishReadingDate:
-                                        finishReadingDateController.text,
-                                    year: yearController.text,
-                                  );
-                                  Navigator.of(context).pop();
-                                  // Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Book edited successfully'),
-                                    ),
-                                  );
-                                }
-                              });
+                              if (_formKey.currentState!.validate() &&
+                                  _pickedImage == null) {
+                                Book.updateBook(
+                                  title: titleController.text,
+                                  author: authorController.text,
+                                  totalPage:
+                                      int.tryParse(totalPageController.text),
+                                  readingStatus: widget.currentReadingStatus,
+                                  docID: widget.documentId,
+                                  startReadingDate:
+                                      startReadingDateController.text,
+                                  finishReadingDate:
+                                      finishReadingDateController.text,
+                                  year: yearController.text,
+                                );
+                                Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Book edited successfully'),
+                                  ),
+                                );
+                              } else if (_formKey.currentState!.validate() &&
+                                  _pickedImage != null) {
+                                await Book.updateBookImage(
+                                  title: titleController.text,
+                                  author: authorController.text,
+                                  totalPage:
+                                      int.tryParse(totalPageController.text),
+                                  readingStatus: widget.currentReadingStatus,
+                                  bookCover: _pickedImage,
+                                  docID: widget.documentId,
+                                  startReadingDate:
+                                      startReadingDateController.text,
+                                  finishReadingDate:
+                                      finishReadingDateController.text,
+                                  year: yearController.text,
+                                );
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Book edited successfully'),
+                                  ),
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

@@ -1,6 +1,5 @@
 import 'package:final_projek/pages/add_note_page.dart';
 import 'package:final_projek/pages/edit/edit_read_later_page.dart';
-import 'package:final_projek/pages/edit_book_page.dart';
 import 'package:final_projek/services/database/book.dart';
 import 'package:final_projek/widgets/note_list.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +82,7 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                         currentAuthor: widget.author,
                         currentTotalPage: widget.totalPage,
                         currentReadingStatus: widget.readingStatus,
+                        currentUrlCoverBook: widget.urlCoverBook,
                       ),
                     ),
                   );

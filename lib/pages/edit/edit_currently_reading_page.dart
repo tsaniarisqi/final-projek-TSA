@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:final_projek/services/database/book.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
+import '../../widgets/selected_photo_options_screen.dart';
 
 class EditCurrentlyReading extends StatefulWidget {
   final documentId;
@@ -8,6 +14,7 @@ class EditCurrentlyReading extends StatefulWidget {
   final String currentAuthor;
   final int currentTotalPage;
   final String currentReadingStatus;
+  final String currentUrlCoverBook;
   final String currentStartReadingDate;
 
   const EditCurrentlyReading({
@@ -17,6 +24,7 @@ class EditCurrentlyReading extends StatefulWidget {
     required this.currentAuthor,
     required this.currentTotalPage,
     required this.currentReadingStatus,
+    required this.currentUrlCoverBook,
     required this.currentStartReadingDate,
   }) : super(key: key);
 
@@ -35,19 +43,76 @@ class _EditCurrentlyReadingState extends State<EditCurrentlyReading> {
   DateTime? _dateTime;
 
   void _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate:
-          DateFormat('dd MMM yyyy').parse(widget.currentStartReadingDate),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2050),
-    ).then((value) {
-      setState(() {
-        _dateTime = value!;
-        startReadingDateController.text =
-            DateFormat('dd MMM yyyy').format(_dateTime!);
+    if (widget.currentStartReadingDate == "") {
+      showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050),
+      ).then((value) {
+        setState(() {
+          _dateTime = value!;
+          startReadingDateController.text =
+              DateFormat('dd MMM yyyy').format(_dateTime!);
+        });
       });
-    });
+    } else {
+      showDatePicker(
+        context: context,
+        initialDate:
+            DateFormat('dd MMM yyyy').parse(widget.currentStartReadingDate),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050),
+      ).then((value) {
+        setState(() {
+          _dateTime = value!;
+          startReadingDateController.text =
+              DateFormat('dd MMM yyyy').format(_dateTime!);
+        });
+      });
+    }
+  }
+
+  File? _pickedImage;
+
+  Future _pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      File? img = File(image.path);
+      setState(() {
+        _pickedImage = img;
+        Navigator.of(context).pop();
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _showSelectPhotoOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectedPhotoOptionsScreen(
+                onTap: _pickImage,
+              ),
+            );
+          }),
+    );
   }
 
   @override
@@ -73,7 +138,6 @@ class _EditCurrentlyReadingState extends State<EditCurrentlyReading> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // title form
                   const Text(
                     'Edit a Book',
                     style: TextStyle(
@@ -85,6 +149,47 @@ class _EditCurrentlyReadingState extends State<EditCurrentlyReading> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // Book Cover
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _showSelectPhotoOptions(context);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.19,
+                        width: MediaQuery.of(context).size.width * 0.28,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: _pickedImage == null
+                              ? ClipRect(
+                                  child: Image(
+                                    image: NetworkImage(
+                                        widget.currentUrlCoverBook),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                )
+                              : ClipRect(
+                                  child: Image(
+                                    image: FileImage(_pickedImage!),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
+                  // title form
                   const SizedBox(
                     height: 8,
                   ),
@@ -241,7 +346,8 @@ class _EditCurrentlyReadingState extends State<EditCurrentlyReading> {
                               ),
                             ),
                             onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
+                              if (_formKey.currentState!.validate() &&
+                                  _pickedImage == null) {
                                 await Book.updateBook(
                                   title: titleController.text,
                                   author: authorController.text,
@@ -255,7 +361,26 @@ class _EditCurrentlyReadingState extends State<EditCurrentlyReading> {
                                 Navigator.of(context).pop();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Note edited successfully'),
+                                    content: Text('Book edited successfully'),
+                                  ),
+                                );
+                              } else if (_formKey.currentState!.validate() &&
+                                  _pickedImage != null) {
+                                await Book.updateBookImage(
+                                  title: titleController.text,
+                                  author: authorController.text,
+                                  totalPage:
+                                      int.tryParse(totalPageController.text),
+                                  readingStatus: widget.currentReadingStatus,
+                                  bookCover: _pickedImage,
+                                  docID: widget.documentId,
+                                  startReadingDate:
+                                      startReadingDateController.text,
+                                );
+                                Navigator.of(context).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Book edited successfully'),
                                   ),
                                 );
                               }

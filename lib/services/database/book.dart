@@ -152,6 +152,44 @@ class Book {
         .catchError((e) => print(e));
   }
 
+  // edit book with image
+  static Future<void> updateBookImage({
+    String? title,
+    String? author,
+    int? totalPage,
+    String? readingStatus,
+    String? urlBookCover,
+    File? bookCover,
+    String? docID,
+    String? startReadingDate,
+    String? finishReadingDate,
+    String? year,
+  }) async {
+    DocumentReference documentReferencer =
+        _mainCollection.doc(user?.uid).collection('books').doc(docID);
+    final ref =
+        FirebaseStorage.instance.ref().child('cover').child(title! + '.jpg');
+    await ref.putFile(bookCover!);
+    urlBookCover = await ref.getDownloadURL();
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "title": title,
+      "author": author,
+      "totalPage": totalPage,
+      "readingStatus": readingStatus,
+      "bookCover": urlBookCover,
+      "startReadingDate": startReadingDate,
+      "finishReadingDate": finishReadingDate,
+      "year": year,
+    };
+
+    await documentReferencer
+        .update(data)
+        // .set(data, SetOptions(merge: true))
+        .whenComplete(() => print("Book updated in the database"))
+        .catchError((e) => print(e));
+  }
+
   static Future<void> updateCurrentPage({
     int? currentPage,
     String? docID,

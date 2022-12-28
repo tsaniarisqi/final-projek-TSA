@@ -138,6 +138,7 @@ class _DetailCurrentlyReadingBookState
                         currentAuthor: widget.author,
                         currentTotalPage: widget.totalPage,
                         currentReadingStatus: widget.readingStatus,
+                        currentUrlCoverBook: widget.urlCoverBook,
                         currentStartReadingDate: widget.startReadingDate,
                       ),
                     ),
