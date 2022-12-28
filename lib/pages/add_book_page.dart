@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:final_projek/pages/main_page.dart';
 import 'package:final_projek/services/database/book.dart';
+import 'package:final_projek/widgets/selected_photo_options_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -46,6 +49,46 @@ class _AddPageState extends State<AddPage> {
     });
   }
 
+  Future _pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      File? img = File(image.path);
+      setState(() {
+        _pickedImage = img;
+        Navigator.of(context).pop();
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _showSelectPhotoOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectedPhotoOptionsScreen(
+                onTap: _pickImage,
+              ),
+            );
+          }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,6 +112,45 @@ class _AddPageState extends State<AddPage> {
                   ),
                   const SizedBox(
                     height: 8,
+                  ),
+
+                  // Book Cover
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _showSelectPhotoOptions(context);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.19,
+                        width: MediaQuery.of(context).size.width * 0.28,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: _pickedImage == null
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.camera_alt),
+                                    Text('Add Cover')
+                                  ],
+                                )
+                              : ClipRect(
+                                  child: Image(
+                                    image: FileImage(_pickedImage!),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
                   ),
 
                   // title form
@@ -183,44 +265,13 @@ class _AddPageState extends State<AddPage> {
                     },
                   ),
                   const SizedBox(
-                    height: 8,
-                  ),
-
-                  // Book Cover
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      final picker = ImagePicker();
-                      final pickedImage =
-                          await picker.pickImage(source: ImageSource.gallery);
-                      final pickedImageFile = File(pickedImage!.path);
-                      setState(() {
-                        _pickedImage = pickedImageFile;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(8),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: const Color(0xff707070).withOpacity(0.1),
-                      ),
-                      child: Column(
-                        children: const [
-                          Icon(Icons.upload_file),
-                          Text('Upload Image')
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
                     height: 16,
                   ),
 
                   // submit button
+                  const SizedBox(
+                    height: 8,
+                  ),
                   Container(
                     width: double.infinity,
                     height: 50,
@@ -248,6 +299,12 @@ class _AddPageState extends State<AddPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Book added successfully'),
+                            ),
+                          );
+                        } else if (_pickedImage == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill book cover'),
                             ),
                           );
                         }
