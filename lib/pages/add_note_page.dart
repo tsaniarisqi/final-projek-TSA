@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:final_projek/services/database/note.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
+import '../widgets/selected_photo_options_screen.dart';
 
 class AddNote extends StatefulWidget {
   final documentId;
@@ -33,6 +40,56 @@ class _AddNoteState extends State<AddNote> {
     });
   }
 
+  File? _pickedImage;
+
+  Future _pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      File? img = File(image.path);
+      img = await _cropImage(imageFile: img);
+      setState(() {
+        _pickedImage = img;
+        Navigator.of(context).pop();
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<File?> _cropImage({required File imageFile}) async {
+    CroppedFile? croppedImage =
+        await ImageCropper().cropImage(sourcePath: imageFile.path);
+    if (croppedImage == null) return null;
+    return File(croppedImage.path);
+  }
+
+  void _showSelectPhotoOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectedPhotoOptionsScreen(
+                onTap: _pickImage,
+              ),
+            );
+          }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,7 +102,6 @@ class _AddNoteState extends State<AddNote> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // note
                   const Text(
                     'Add a Note',
                     style: TextStyle(
@@ -57,6 +113,8 @@ class _AddNoteState extends State<AddNote> {
                   const SizedBox(
                     height: 8,
                   ),
+
+                  // note
                   const SizedBox(
                     height: 8,
                   ),
@@ -72,6 +130,8 @@ class _AddNoteState extends State<AddNote> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
+                    maxLines: 10,
+                    minLines: 5,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please fill this section';
@@ -145,23 +205,70 @@ class _AddNoteState extends State<AddNote> {
                     height: 16,
                   ),
 
+                  // Note Image
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _showSelectPhotoOptions(context);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.19,
+                        width: MediaQuery.of(context).size.width * 0.28,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: _pickedImage == null
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.camera_alt),
+                                    Text('Add Image')
+                                  ],
+                                )
+                              : ClipRect(
+                                  child: Image(
+                                    image: FileImage(_pickedImage!),
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+
                   // submit button
                   Container(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (_addNoteFormKey.currentState!.validate()) {
-                          await Note.addNote(
+                        if (_addNoteFormKey.currentState!.validate() &&
+                            _pickedImage != null) {
+                          await Note.addNoteImg(
                             note: noteController.text,
                             page: int.tryParse(pageController.text),
                             date: dateController.text,
                             docId: widget.documentId,
+                            noteImg: _pickedImage,
                           );
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Note added successfully'),
+                            ),
+                          );
+                        } else if (_pickedImage == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill book cover'),
                             ),
                           );
                         }

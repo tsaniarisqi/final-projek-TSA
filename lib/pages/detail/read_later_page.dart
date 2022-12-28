@@ -266,7 +266,7 @@ class _DetailReadLaterBookState extends State<DetailReadLaterBook> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  height: 500,
+                  height: 650,
                   child: NoteList(bookId: widget.documentId),
                 ),
               ],

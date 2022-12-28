@@ -229,7 +229,7 @@ class _DetailFinishedBookState extends State<DetailFinishedBook> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  height: 500,
+                  height: 650,
                   child: NoteList(bookId: widget.documentId),
                 ),
               ],

@@ -26,6 +26,7 @@ class NoteList extends StatelessWidget {
               String note = documentSnapshot['note'];
               int page = documentSnapshot['page'];
               String date = documentSnapshot['date'];
+              String urlNote = documentSnapshot['noteImg'];
 
               return Card(
                 shape: RoundedRectangleBorder(
@@ -39,6 +40,7 @@ class NoteList extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          // date
                           Text(
                             date,
                             maxLines: 1,
@@ -49,6 +51,8 @@ class NoteList extends StatelessWidget {
                               color: Colors.black54,
                             ),
                           ),
+
+                          // info icon
                           PopupMenuButton<int>(
                             itemBuilder: (context) => [
                               // PopupMenuItem 1
@@ -131,6 +135,8 @@ class NoteList extends StatelessWidget {
                           ),
                         ],
                       ),
+
+                      // Page
                       Text(
                         ('Page: ' + page.toString()),
                         maxLines: 1,
@@ -141,11 +147,32 @@ class NoteList extends StatelessWidget {
                           color: Colors.black54,
                         ),
                       ),
+
+                      // image
+                      Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.fromLTRB(0, 8, 8, 20),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image(
+                                image: NetworkImage(
+                                  urlNote,
+                                ),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // note
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           note,
-                          maxLines: 5,
+                          maxLines: 20,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
